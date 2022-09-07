@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
-public class Car {
+public class Car implements Vehicle {
 
     public Car(String brand, int modelsLength) {
         this.brand = brand;
@@ -28,7 +28,7 @@ public class Car {
         this.brand = brand;
     }
 
-    public void setModelName(String oldName, String newName){
+    public void setModelName(String oldName, String newName) {
         Optional<Model> model = findModelByName(oldName);
         model.orElseThrow(() -> new NoSuchModelNameException(oldName)).name = newName;
     }
@@ -68,7 +68,7 @@ public class Car {
                 .findFirst();
         int delInd = modelIndex.orElseThrow(() -> new NoSuchModelNameException(name));
         Model[] models = new Model[this.models.length - 1];
-        System.arraycopy(this.models,0, models, 0, delInd - 1);
+        System.arraycopy(this.models, 0, models, 0, delInd - 1);
         if (delInd != this.models.length - 1) {
             System.arraycopy(this.models, delInd + 1, models, delInd, this.models.length - delInd - 1);
         }
