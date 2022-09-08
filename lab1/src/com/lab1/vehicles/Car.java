@@ -1,10 +1,11 @@
-package com.lab1;
+package com.lab1.vehicles;
 
 import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.exceptions.ModelPriceOutOfBoundsException;
 import com.lab1.exceptions.NoSuchModelNameException;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
@@ -34,7 +35,7 @@ public class Car implements Vehicle {
     }
 
     public String[] getModelsNames() {
-        return Arrays.stream(models).map(m -> m.name).toArray(String[]::new);
+        return Arrays.stream(models).filter(Objects::nonNull).map(m -> m.name).toArray(String[]::new);
     }
 
     public double getModelPriceByName(String name) throws NoSuchModelNameException {
@@ -54,8 +55,20 @@ public class Car implements Vehicle {
         if (price <= 0) {
             throw new ModelPriceOutOfBoundsException();
         }
-        if (Arrays.stream(this.models).anyMatch(m -> m.name.equals(name))) {
+        if (Arrays.stream(this.models).anyMatch(m -> {
+                if (m != null) {
+                   return m.name.equals(name);
+                }
+                    return false;
+                }
+        )) {
             throw new DuplicateModelNameException(name);
+        }
+        for (int i = 0; i < this.models.length; i++) {
+            if (models[i] == null) {
+                models[i] = new Car.Model(name, price);
+                return;
+            }
         }
         Model[] models = Arrays.copyOf(this.models, this.models.length + 1);
         models[models.length - 1] = new Car.Model(name, price);
@@ -64,11 +77,18 @@ public class Car implements Vehicle {
 
     public void deleteModel(String name) throws NoSuchModelNameException {
         OptionalInt modelIndex = IntStream.range(0, this.models.length)
-                .filter(i -> this.models[i].name.equals(name))
+                .filter(i -> {
+                    if (this.models[i] != null) {
+                        return this.models[i].name.equals(name);
+                    }
+                    return false;
+                })
                 .findFirst();
         int delInd = modelIndex.orElseThrow(() -> new NoSuchModelNameException(name));
         Model[] models = new Model[this.models.length - 1];
-        System.arraycopy(this.models, 0, models, 0, delInd - 1);
+        if (delInd != 0) {
+            System.arraycopy(this.models, 0, models, 0, delInd);
+        }
         if (delInd != this.models.length - 1) {
             System.arraycopy(this.models, delInd + 1, models, delInd, this.models.length - delInd - 1);
         }
@@ -76,15 +96,15 @@ public class Car implements Vehicle {
     }
 
     public int getModelsNum() {
-        return this.models.length;
+        return (int)Arrays.stream(this.models).filter(Objects::nonNull).count();
     }
 
     public Double[] getModelsPrices() {
-        return Arrays.stream(models).map(m -> m.price).toArray(Double[]::new);
+        return Arrays.stream(models).filter(Objects::nonNull).map(m -> m.price).toArray(Double[]::new);
     }
 
     private Optional<Model> findModelByName(String name) {
-        return Arrays.stream(models).filter(m -> m.name.equals(name)).findFirst();
+        return Arrays.stream(models).filter(Objects::nonNull).filter(m -> m.name.equals(name)).findFirst();
     }
 
     private class Model {

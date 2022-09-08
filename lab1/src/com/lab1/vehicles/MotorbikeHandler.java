@@ -1,21 +1,22 @@
-package com.lab1;
+package com.lab1.vehicles;
 
 import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.exceptions.ModelPriceOutOfBoundsException;
 import com.lab1.exceptions.NoSuchModelNameException;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
-public class Motorbike implements InvocationHandler {
+public class MotorbikeHandler implements InvocationHandler  {
 
-    private final InnerMotorbike original;
+    private final Motorbike original;
 
-    public Motorbike(String name, int size) {
-        this.original = new InnerMotorbike(name, size);
+    public MotorbikeHandler(String name, int size) {
+        this.original = new Motorbike(name, size);
     }
 
     @Override
@@ -25,10 +26,15 @@ public class Motorbike implements InvocationHandler {
                 method.getName().contains("delete")) {
             original.lastModified = new Date().getTime();
         }
-        return method.invoke(original, args);
+        try {
+           Object res = method.invoke(original, args);
+           return res;
+        } catch (InvocationTargetException | UndeclaredThrowableException e) {
+            throw e.getCause();
+        }
     }
 
-    public class InnerMotorbike {
+    public static class Motorbike implements Vehicle {
 
         private int size = 0;
 
@@ -42,9 +48,21 @@ public class Motorbike implements InvocationHandler {
             lastModified = new Date().getTime();
         }
 
-        private InnerMotorbike(String brand, int size) {
+        private Motorbike(String brand, int size) {
             this.brand = brand;
             this.size = size;
+            if (size > 0) {
+                this.head = new Model();
+                head.prev = head;
+                head.next = head;
+                IntStream.range(1, size).forEach(i -> {
+                    Model node = new Model();
+                    node.prev = head.prev;
+                    node.next = head;
+                    head.prev.next = node;
+                    head.prev = node;
+                });
+            }
         }
 
         public long getLastModified() {
@@ -65,7 +83,8 @@ public class Motorbike implements InvocationHandler {
         }
 
         public String[] getModelsNames() {
-            return getArray(String.class, m -> m.name);
+            String[] names = getArray(String.class, m -> m.name);
+            return Arrays.stream(names).filter(Objects::nonNull).toArray(String[]::new);
         }
 
         public double getModelPriceByName(String name) throws NoSuchModelNameException {
@@ -82,7 +101,8 @@ public class Motorbike implements InvocationHandler {
         }
 
         public Double[] getModelsPrices() {
-            return getArray(Double.class, m -> m.price);
+            Double[] prices = getArray(Double.class, m -> m.price);
+            return Arrays.stream(prices).filter(Objects::nonNull).toArray(Double[]::new);
         }
 
         public void addModel(String name, double price) throws DuplicateModelNameException {
@@ -90,18 +110,32 @@ public class Motorbike implements InvocationHandler {
                 head = new Model(name, price);
                 head.next = head;
                 head.prev = head;
+                size++;
             } else {
                 try {
                     findModelByName(name);
                 } catch (NoSuchModelNameException e) {  //основная логика в catch
-                    Model node = new Model(name, price);
-                    node.next = head;
-                    node.prev = head.prev;
-                    head.prev = node;
+
+                    Model node = head;
+                    do {
+                        if (node.name == null) {
+                            node.name = name;
+                            node.price = price;
+                            return;
+                        }
+                        node = node.next;
+                    } while (node != head);
+
+                    Model newNode = new Model(name, price);
+                    newNode.next = head;
+                    newNode.prev = head.prev;
+                    head.prev.next = newNode;
+                    head.prev = newNode;
+                    size++;
+                    return;
                 }
                 throw new DuplicateModelNameException(name);
             }
-            size++;
         }
 
         public void deleteModel(String name) throws NoSuchModelNameException {
@@ -111,11 +145,22 @@ public class Motorbike implements InvocationHandler {
             Model node = findModelByName(name);
             node.next.prev = node.prev;
             node.prev.next = node.next;
+            if(head == node) {
+                head = node.next;
+            }
             size--;
         }
 
         public int getModelsNum() {
-            return size;
+            int res = 0;
+            Model node = head;
+            do {
+                if(node.name != null) {
+                    res++;
+                }
+                node = node.next;
+            } while (node != head);
+            return res;
         }
 
         private <T> T[] getArray(Class<T> clazz, Function<Model, T> supplier) {
@@ -139,7 +184,7 @@ public class Motorbike implements InvocationHandler {
             }
             Model node = head;
             do {
-                if (node.name.equals(name)) {
+                if (node.name != null && node.name.equals(name)) {
                     return node;
                 }
                 node = node.next;
@@ -153,6 +198,10 @@ public class Motorbike implements InvocationHandler {
 
                 this.name = name;
                 this.price = price;
+            }
+
+            public Model() {
+
             }
 
             private Model next;
