@@ -5,7 +5,7 @@ import com.lab1.vehicles.Vehicle;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class UtilService {
+public class VehicleUtils {
 
     public static double getAverage(Vehicle vehicle) {
         return Arrays.stream(vehicle.getModelsPrices()).reduce(0.0, Double::sum)/(double)vehicle.getModelsNum();

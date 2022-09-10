@@ -4,6 +4,7 @@ import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.exceptions.ModelPriceOutOfBoundsException;
 import com.lab1.exceptions.NoSuchModelNameException;
 
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class MotorbikeHandler implements InvocationHandler  {
+public class MotorbikeHandler implements InvocationHandler {
 
     private final Motorbike original;
 
@@ -34,7 +35,7 @@ public class MotorbikeHandler implements InvocationHandler  {
         }
     }
 
-    public static class Motorbike implements Vehicle {
+    public static class Motorbike implements Vehicle, Serializable {
 
         private int size = 0;
 
@@ -48,7 +49,7 @@ public class MotorbikeHandler implements InvocationHandler  {
             lastModified = new Date().getTime();
         }
 
-        private Motorbike(String brand, int size) {
+        public Motorbike(String brand, int size)  {
             this.brand = brand;
             this.size = size;
             if (size > 0) {
@@ -192,7 +193,7 @@ public class MotorbikeHandler implements InvocationHandler  {
             throw new NoSuchModelNameException(name);
         }
 
-        private class Model {
+        private class Model implements Serializable {
 
             public Model(String name, double price) {
 
