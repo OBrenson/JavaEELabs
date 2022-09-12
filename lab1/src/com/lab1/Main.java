@@ -31,22 +31,22 @@ public class Main {
         }
 
         testVehicleFromArgs(brand, size, names, prices);
-//        Car car = new Car("lada", 1);
-//        testVehicle(car);
-//        car = new Car("lada-plus", 10);
-//        testVehicle(car);
-//
-//        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
-//                MotorbikeHandler.Motorbike.class.getClassLoader(),
-//                MotorbikeHandler.Motorbike.class.getInterfaces(),
-//                new MotorbikeHandler("yamaha", 1));
-//        testVehicle(motorbike);
-//
-//        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
-//                MotorbikeHandler.Motorbike.class.getClassLoader(),
-//                MotorbikeHandler.Motorbike.class.getInterfaces(),
-//                new MotorbikeHandler("yamaha", 10));
-//        testVehicle(motorbike1);
+        Car car = new Car("lada", 1);
+        testVehicle(car);
+        car = new Car("lada-plus", 10);
+        testVehicle(car);
+
+        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
+                MotorbikeHandler.Motorbike.class.getClassLoader(),
+                MotorbikeHandler.Motorbike.class.getInterfaces(),
+                new MotorbikeHandler("yamaha", 1));
+        testVehicle(motorbike);
+
+        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
+                MotorbikeHandler.Motorbike.class.getClassLoader(),
+                MotorbikeHandler.Motorbike.class.getInterfaces(),
+                new MotorbikeHandler("yamaha", 10));
+        testVehicle(motorbike1);
     }
 
     private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices) {
@@ -77,17 +77,51 @@ public class Main {
         double vAvr = VehicleUtils.getAverage(vehicle);
         assert avr == vAvr;
 
-        vehicle.addModel("kalina", 10000.0);
+        vehicle.addModel("kalina", 10.0);
         vehicle.setModelName("kalina", "kalina-plus");
         assert Arrays.asList(vehicle.getModelsNames()).contains("kalina-plus");
         assert !Arrays.asList(vehicle.getModelsNames()).contains("kalina");
 
+        vehicle.setModelPriceByName("kalina-plus", 10000.0);
         assert vehicle.getModelPriceByName("kalina-plus") == 10000.0;
 
         vehicle.deleteModel("kalina-plus");
         assert !Arrays.asList(vehicle.getModelsNames()).contains("kalina-plus");
 
         VehicleUtils.printModelsNamesAndPrices(vehicle);
+
+        boolean isException = false;
+        try {
+            vehicle.setModelPriceByName(names[0] + "asd", 20000.0);
+        } catch (NoSuchModelNameException e) {
+            isException = true;
+        }
+        assert isException;
+        isException = false;
+
+        try {
+            vehicle.getModelPriceByName("kalina");
+        } catch (NoSuchModelNameException e) {
+            isException = true;
+        }
+        assert isException;
+        isException = false;
+
+        try {
+            vehicle.setModelPriceByName(names[0], -100);
+        } catch (ModelPriceOutOfBoundsException e) {
+            isException = true;
+        }
+        assert isException;
+        isException = false;
+
+        try {
+            vehicle.addModel(names[0], 1000000.0);
+        } catch (DuplicateModelNameException e) {
+            isException = true;
+        }
+        assert isException;
+
     }
 
     private static void testVehicle(Vehicle vehicle) {
