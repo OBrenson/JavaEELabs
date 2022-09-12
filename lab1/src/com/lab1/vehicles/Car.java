@@ -4,13 +4,14 @@ import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.exceptions.ModelPriceOutOfBoundsException;
 import com.lab1.exceptions.NoSuchModelNameException;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
-public class Car implements Vehicle {
+public class Car implements Vehicle, Serializable {
 
     public Car(String brand, int modelsLength) {
         this.brand = brand;
@@ -66,12 +67,12 @@ public class Car implements Vehicle {
         }
         for (int i = 0; i < this.models.length; i++) {
             if (models[i] == null) {
-                models[i] = new Car.Model(name, price);
+                models[i] = new Model(name, price);
                 return;
             }
         }
         Model[] models = Arrays.copyOf(this.models, this.models.length + 1);
-        models[models.length - 1] = new Car.Model(name, price);
+        models[models.length - 1] = new Model(name, price);
         this.models = models;
     }
 
@@ -107,7 +108,7 @@ public class Car implements Vehicle {
         return Arrays.stream(models).filter(Objects::nonNull).filter(m -> m.name.equals(name)).findFirst();
     }
 
-    private class Model {
+    private class Model implements Serializable {
 
         public Model(String name, double price) {
             this.name = name;

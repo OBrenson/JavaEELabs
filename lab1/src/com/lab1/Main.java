@@ -36,7 +36,7 @@ public class Main {
         vehicle.addModel("vesta", 100000.0);
         vehicle.addModel("x-ray", 150000.0);
 
-        double avr = UtilService.getAverage(vehicle);
+        double avr = VehicleUtils.getAverage(vehicle);
         assert avr == 250000.0/2.0;
 
         String[] names = vehicle.getModelsNames();
@@ -49,7 +49,7 @@ public class Main {
         vehicle.addModel("priora", 200000.0);
         vehicle.addModel("kalina", 250000.0);
         vehicle.addModel("kalina-sport", 300000.0);
-        UtilService.printModelsNamesAndPrices(vehicle);
+        VehicleUtils.printModelsNamesAndPrices(vehicle);
 
         assert vehicle.getModelsNum() == 5;
 
@@ -105,6 +105,6 @@ public class Main {
         assert isException;
 
         System.out.println("After remove");
-        UtilService.printModelsNamesAndPrices(vehicle);
+        VehicleUtils.printModelsNamesAndPrices(vehicle);
     }
 }
