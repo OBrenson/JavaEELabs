@@ -46,7 +46,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public void setModelPriceByName(String name, double price) throws NoSuchModelNameException {
-        if (price <= 0) {
+        if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
         Optional<Model> model = findModelByName(name);
@@ -54,7 +54,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
-        if (price <= 0) {
+        if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
         if (Arrays.stream(this.models).anyMatch(m -> m.name.equals(name))) {

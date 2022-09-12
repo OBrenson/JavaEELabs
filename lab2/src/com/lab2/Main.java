@@ -6,20 +6,34 @@ import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, DuplicateModelNameException {
-        String[] names = new String[]{"Car1", "Car2", "Car3", "Car4"};
-        Double[] prices = new Double[]{100., 200., 300., 400.,};
-        Car car = new Car("vlada", 4);
+        if (args.length != 4) {
+            System.out.println("Not enough params");
+            return;
+        }
+
+        String brand = args[0];
+        int size = Integer.parseInt(args[1]);
+        String[] names = args[2].split(",");
+        Double[] prices = Arrays.stream(args[3].split(",")).map(Double::parseDouble).toArray(Double[]::new);
+        if (names.length != prices.length) {
+            System.out.println("Number of prices and names must be equal");
+            return;
+        }
+
+        Car car = new Car(brand, size);
         IntStream.range(0, names.length).forEachOrdered(i -> {
             try {
                 car.addModel(names[i], prices[i]);
             } catch (DuplicateModelNameException e) {
                 e.printStackTrace();
+                System.exit(1);
             }
         });
 

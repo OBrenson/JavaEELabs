@@ -94,7 +94,7 @@ public class MotorbikeHandler implements InvocationHandler {
         }
 
         public void setModelPriceByName(String name, double price) throws NoSuchModelNameException {
-            if (price <= 0) {
+            if (price < 0) {
                 throw new ModelPriceOutOfBoundsException();
             }
             Model model = findModelByName(name);
@@ -107,6 +107,9 @@ public class MotorbikeHandler implements InvocationHandler {
         }
 
         public void addModel(String name, double price) throws DuplicateModelNameException {
+            if (price < 0) {
+                throw new ModelPriceOutOfBoundsException();
+            }
             if (head == null) {
                 head = new Model(name, price);
                 head.next = head;
