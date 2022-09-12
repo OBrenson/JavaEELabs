@@ -1,6 +1,7 @@
 package com.lab2;
 
 import com.lab1.VehicleUtils;
+import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.vehicles.Car;
 import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
@@ -27,7 +28,7 @@ public class StreamVehicleUtils extends VehicleUtils {
         }
     }
 
-    public static Vehicle inputVehicle(InputStream in) throws IOException {
+    public static Vehicle inputVehicle(InputStream in) throws IOException, DuplicateModelNameException {
 
         byte[] brand;
         int modelsNum = 0;
@@ -67,7 +68,9 @@ public class StreamVehicleUtils extends VehicleUtils {
         } else {
             result = new MotorbikeHandler.Motorbike(new String(brand), modelsNum);
         }
-        IntStream.range(0, modelsNum).forEach(i -> result.addModel(names[i], prices[i]));
+        for (int i = 0; i < modelsNum; i++) {
+            result.addModel(names[i], prices[i]);
+        }
 
         return result;
     }
@@ -92,7 +95,7 @@ public class StreamVehicleUtils extends VehicleUtils {
         }
     }
 
-    public static Vehicle readVehicle(Reader in) throws IOException {
+    public static Vehicle readVehicle(Reader in) throws IOException,DuplicateModelNameException {
         char[] brand;
         int modelsNum = 0;
         String[] names;
@@ -132,7 +135,9 @@ public class StreamVehicleUtils extends VehicleUtils {
         } else {
             result = new MotorbikeHandler.Motorbike(new String(brand), modelsNum);
         }
-        IntStream.range(0, modelsNum).forEach(i -> result.addModel(names[i], prices[i]));
+        for (int i = 0; i < modelsNum; i++) {
+            result.addModel(names[i], prices[i]);
+        }
 
         return result;
     }

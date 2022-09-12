@@ -1,5 +1,6 @@
 package com.lab2;
 
+import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.vehicles.Car;
 import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
@@ -10,12 +11,16 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, DuplicateModelNameException {
         String[] names = new String[]{"Car1", "Car2", "Car3", "Car4"};
         Double[] prices = new Double[]{100., 200., 300., 400.,};
         Car car = new Car("vlada", 4);
         IntStream.range(0, names.length).forEachOrdered(i -> {
-            car.addModel(names[i], prices[i]);
+            try {
+                car.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+            }
         });
 
         File file = File.createTempFile("vehicle", ".txt");
@@ -40,18 +45,18 @@ public class Main {
             compareVehicles(car, carSR, "Reader/Writer");
         }
 
+        file = File.createTempFile("bike", ".txt");
+        OutputStream originalOut = System.out;
+        System.setIn(new FileInputStream(file));
+        System.setOut(new PrintStream(new FileOutputStream(file)));
         try (
                 InputStream in = System.in;
-                OutputStream out = System.out;
+                PrintStream out = System.out;
         ) {
-            try (
-                InputStreamReader isr = new InputStreamReader(in);
-                OutputStreamWriter osw = new OutputStreamWriter(out);
-            ) {
-                StreamVehicleUtils.writeVehicle(car, osw);
-                Vehicle carS = StreamVehicleUtils.readVehicle(isr);
-                compareVehicles(car, carS, "StreamReader");
-            }
+            StreamVehicleUtils.outputVehicle(car, out);
+            Vehicle carS = StreamVehicleUtils.inputVehicle(in);
+            System.setOut(new PrintStream(originalOut));
+            compareVehicles(car, carS, "System.in/System.out");
         }
 
         serializeVehicles();
@@ -62,7 +67,11 @@ public class Main {
         Double[] prices = new Double[]{100., 200., 300., 400.,};
         Car car = new Car("vlada", 4);
         IntStream.range(0, names.length).forEachOrdered(i -> {
-            car.addModel(names[i], prices[i]);
+            try {
+                car.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+            }
         });
 
         File file = File.createTempFile("car", ".txt");
@@ -84,7 +93,11 @@ public class Main {
 
         MotorbikeHandler.Motorbike motorbike = new MotorbikeHandler.Motorbike("bike", 1);
         IntStream.range(0, names.length).forEachOrdered(i -> {
-            motorbike.addModel(names[i], prices[i]);
+            try {
+                motorbike.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+            }
         });
 
         file = File.createTempFile("bike", ".txt");

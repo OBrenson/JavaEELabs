@@ -5,6 +5,8 @@ import com.lab1.exceptions.NoSuchModelNameException;
 
 public interface Vehicle {
 
+    String s = "";
+
     void setModelName(String oldName, String newName) throws NoSuchModelNameException;
 
     String[] getModelsNames();
