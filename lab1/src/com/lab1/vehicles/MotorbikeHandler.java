@@ -119,7 +119,7 @@ public class MotorbikeHandler implements InvocationHandler {
 
                     Model node = head;
                     do {
-                        if (node.name == null) {
+                        if (node.name.equals("")) {
                             node.name = name;
                             node.price = price;
                             return;
@@ -156,9 +156,7 @@ public class MotorbikeHandler implements InvocationHandler {
             int res = 0;
             Model node = head;
             do {
-                if(node.name != null) {
-                    res++;
-                }
+                res++;
                 node = node.next;
             } while (node != head);
             return res;
@@ -202,7 +200,8 @@ public class MotorbikeHandler implements InvocationHandler {
             }
 
             public Model() {
-
+                name = "";
+                price = 0.0;
             }
 
             private Model next;

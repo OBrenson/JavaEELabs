@@ -16,6 +16,7 @@ public class Car implements Vehicle, Serializable {
     public Car(String brand, int modelsLength) {
         this.brand = brand;
         this.models = new Model[modelsLength];
+        IntStream.range(0, modelsLength).forEachOrdered(i -> models[i] = new Model());
     }
 
     private String brand;
@@ -36,7 +37,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public String[] getModelsNames() {
-        return Arrays.stream(models).filter(Objects::nonNull).map(m -> m.name).toArray(String[]::new);
+        return Arrays.stream(models).map(m -> m.name).toArray(String[]::new);
     }
 
     public double getModelPriceByName(String name) throws NoSuchModelNameException {
@@ -56,18 +57,13 @@ public class Car implements Vehicle, Serializable {
         if (price <= 0) {
             throw new ModelPriceOutOfBoundsException();
         }
-        if (Arrays.stream(this.models).anyMatch(m -> {
-                if (m != null) {
-                   return m.name.equals(name);
-                }
-                    return false;
-                }
-        )) {
+        if (Arrays.stream(this.models).anyMatch(m -> m.name.equals(name))) {
             throw new DuplicateModelNameException(name);
         }
         for (int i = 0; i < this.models.length; i++) {
-            if (models[i] == null) {
-                models[i] = new Model(name, price);
+            if (models[i].name.equals("")) {
+                models[i].name = name;
+                models[i].price = price;
                 return;
             }
         }
@@ -101,11 +97,11 @@ public class Car implements Vehicle, Serializable {
     }
 
     public Double[] getModelsPrices() {
-        return Arrays.stream(models).filter(Objects::nonNull).map(m -> m.price).toArray(Double[]::new);
+        return Arrays.stream(models).filter(m -> m.name != null).map(m -> m.price).toArray(Double[]::new);
     }
 
     private Optional<Model> findModelByName(String name) {
-        return Arrays.stream(models).filter(Objects::nonNull).filter(m -> m.name.equals(name)).findFirst();
+        return Arrays.stream(models).filter(m -> m.name != null).filter(m -> m.name.equals(name)).findFirst();
     }
 
     private class Model implements Serializable {
@@ -113,6 +109,11 @@ public class Car implements Vehicle, Serializable {
         public Model(String name, double price) {
             this.name = name;
             this.price = price;
+        }
+
+        public Model() {
+            name = "";
+            price = 0.0;
         }
 
         private String name;

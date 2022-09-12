@@ -40,14 +40,13 @@ public class Main {
             compareVehicles(car, carSR, "Reader/Writer");
         }
 
-        file = File.createTempFile("vehicle3", ".txt");
         try (
-                FileInputStream fis = new FileInputStream(file);
-                FileOutputStream fos = new FileOutputStream(file);
+                InputStream in = System.in;
+                OutputStream out = System.out;
         ) {
             try (
-                InputStreamReader isr = new InputStreamReader(fis);
-                OutputStreamWriter osw = new OutputStreamWriter(fos);
+                InputStreamReader isr = new InputStreamReader(in);
+                OutputStreamWriter osw = new OutputStreamWriter(out);
             ) {
                 StreamVehicleUtils.writeVehicle(car, osw);
                 Vehicle carS = StreamVehicleUtils.readVehicle(isr);

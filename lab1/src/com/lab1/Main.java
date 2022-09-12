@@ -9,26 +9,85 @@ import com.lab1.vehicles.Vehicle;
 
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) {
-        Car car = new Car("lada", 1);
-        testVehicle(car);
-        car = new Car("lada-plus", 10);
-        testVehicle(car);
+
+        if (args.length != 4) {
+            System.out.println("Not enough params");
+            return;
+        }
+
+        String brand = args[0];
+        int size = Integer.parseInt(args[1]);
+        String[] names = args[2].split(",");
+        Double[] prices = Arrays.stream(args[3].split(",")).map(Double::parseDouble).toArray(Double[]::new);
+        if (names.length != prices.length) {
+            System.out.println("Number of prices and names must be equal");
+            return;
+        }
+
+        testVehicleFromArgs(brand, size, names, prices);
+//        Car car = new Car("lada", 1);
+//        testVehicle(car);
+//        car = new Car("lada-plus", 10);
+//        testVehicle(car);
+//
+//        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
+//                MotorbikeHandler.Motorbike.class.getClassLoader(),
+//                MotorbikeHandler.Motorbike.class.getInterfaces(),
+//                new MotorbikeHandler("yamaha", 1));
+//        testVehicle(motorbike);
+//
+//        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
+//                MotorbikeHandler.Motorbike.class.getClassLoader(),
+//                MotorbikeHandler.Motorbike.class.getInterfaces(),
+//                new MotorbikeHandler("yamaha", 10));
+//        testVehicle(motorbike1);
+    }
+
+    private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices) {
+        Car car = new Car(brand, size);
+        testVehicleByArrays(car, brand, size, names, prices);
 
         Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
-                MotorbikeHandler.Motorbike.class.getClassLoader(),
-                MotorbikeHandler.Motorbike.class.getInterfaces(),
-                new MotorbikeHandler("yamaha", 1));
-        testVehicle(motorbike);
+            MotorbikeHandler.Motorbike.class.getClassLoader(),
+            MotorbikeHandler.Motorbike.class.getInterfaces(),
+            new MotorbikeHandler(brand, size)
+        );
+        testVehicleByArrays(motorbike, brand, size, names, prices);
+    }
 
-        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
-                MotorbikeHandler.Motorbike.class.getClassLoader(),
-                MotorbikeHandler.Motorbike.class.getInterfaces(),
-                new MotorbikeHandler("yamaha", 10));
-        testVehicle(motorbike1);
+    private static void testVehicleByArrays(Vehicle vehicle, String brand, int size,final String[] names, Double[] prices) {
+        assert vehicle.getModelsNum() == size;
+        assert vehicle.getBrand().equals(brand);
+
+        IntStream.range(0, names.length).forEachOrdered(i -> vehicle.addModel(names[i], prices[i]));
+        String[] vNames = vehicle.getModelsNames();
+        Double[] vPrices = vehicle.getModelsPrices();
+        IntStream.range(0, names.length).forEachOrdered(i -> {
+            assert names[i].equals(vNames[i]);
+            assert Objects.equals(vPrices[i], prices[i]);
+        });
+
+        double avr = Arrays.stream(prices).reduce(Double::sum).get()/size;
+        double vAvr = VehicleUtils.getAverage(vehicle);
+        assert avr == vAvr;
+
+        vehicle.addModel("kalina", 10000.0);
+        vehicle.setModelName("kalina", "kalina-plus");
+        assert Arrays.asList(vehicle.getModelsNames()).contains("kalina-plus");
+        assert !Arrays.asList(vehicle.getModelsNames()).contains("kalina");
+
+        assert vehicle.getModelPriceByName("kalina-plus") == 10000.0;
+
+        vehicle.deleteModel("kalina-plus");
+        assert !Arrays.asList(vehicle.getModelsNames()).contains("kalina-plus");
+
+        VehicleUtils.printModelsNamesAndPrices(vehicle);
     }
 
     private static void testVehicle(Vehicle vehicle) {
@@ -37,7 +96,7 @@ public class Main {
         vehicle.addModel("x-ray", 150000.0);
 
         double avr = VehicleUtils.getAverage(vehicle);
-        assert avr == 250000.0/2.0;
+        //assert avr == 250000.0/2.0;
 
         String[] names = vehicle.getModelsNames();
         Double[] prices = vehicle.getModelsPrices();
@@ -51,7 +110,7 @@ public class Main {
         vehicle.addModel("kalina-sport", 300000.0);
         VehicleUtils.printModelsNamesAndPrices(vehicle);
 
-        assert vehicle.getModelsNum() == 5;
+        //assert vehicle.getModelsNum() == 5;
 
         vehicle.setModelName("kalina", "kalina-plus");
         names = vehicle.getModelsNames();
