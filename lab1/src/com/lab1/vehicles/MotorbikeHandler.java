@@ -181,7 +181,7 @@ public class MotorbikeHandler implements InvocationHandler {
         }
 
         private Model findModelByName(String name) throws NoSuchModelNameException {
-            if (head == null) {
+            if (head == null || name.equals("")) {
                 throw new NoSuchModelNameException(name);
             }
             Model node = head;

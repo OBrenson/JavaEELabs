@@ -29,24 +29,27 @@ public class Main {
             System.out.println("Number of prices and names must be equal");
             return;
         }
+        if (Arrays.asList(names).contains("")) {
+            System.out.println("Empty names are not allowed");
+        }
 
         testVehicleFromArgs(brand, size, names, prices);
-        Car car = new Car("lada", 1);
-        testVehicle(car);
-        car = new Car("lada-plus", 10);
-        testVehicle(car);
-
-        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
-                MotorbikeHandler.Motorbike.class.getClassLoader(),
-                MotorbikeHandler.Motorbike.class.getInterfaces(),
-                new MotorbikeHandler("yamaha", 1));
-        testVehicle(motorbike);
-
-        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
-                MotorbikeHandler.Motorbike.class.getClassLoader(),
-                MotorbikeHandler.Motorbike.class.getInterfaces(),
-                new MotorbikeHandler("yamaha", 10));
-        testVehicle(motorbike1);
+//        Car car = new Car("lada", 1);
+//        testVehicle(car);
+//        car = new Car("lada-plus", 10);
+//        testVehicle(car);
+//
+//        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
+//                MotorbikeHandler.Motorbike.class.getClassLoader(),
+//                MotorbikeHandler.Motorbike.class.getInterfaces(),
+//                new MotorbikeHandler("yamaha", 1));
+//        testVehicle(motorbike);
+//
+//        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
+//                MotorbikeHandler.Motorbike.class.getClassLoader(),
+//                MotorbikeHandler.Motorbike.class.getInterfaces(),
+//                new MotorbikeHandler("yamaha", 10));
+//        testVehicle(motorbike1);
     }
 
     private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices)
@@ -66,6 +69,7 @@ public class Main {
     private static void testVehicleByArrays(Vehicle vehicle, String brand, int size,final String[] names, Double[] prices)
             throws NoSuchModelNameException,DuplicateModelNameException {
 
+        System.out.println(vehicle instanceof Car ? "Car" : "Motorbike");
         assert vehicle.getModelsNum() == size;
         assert vehicle.getBrand().equals(brand);
 
@@ -131,7 +135,6 @@ public class Main {
             isException = true;
         }
         assert isException;
-
     }
 
     private static void testVehicle(Vehicle vehicle) throws DuplicateModelNameException, NoSuchModelNameException {

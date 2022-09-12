@@ -57,7 +57,7 @@ public class Car implements Vehicle, Serializable {
         if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
-        if (Arrays.stream(this.models).anyMatch(m -> m.name.equals(name))) {
+        if (Arrays.stream(this.models).anyMatch(m -> !m.name.equals("") && m.name.equals(name))) {
             throw new DuplicateModelNameException(name);
         }
         for (int i = 0; i < this.models.length; i++) {

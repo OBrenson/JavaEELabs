@@ -26,6 +26,9 @@ public class Main {
             System.out.println("Number of prices and names must be equal");
             return;
         }
+        if (Arrays.asList(names).contains("")) {
+            System.out.println("Empty names are not allowed");
+        }
 
         Car car = new Car(brand, size);
         IntStream.range(0, names.length).forEachOrdered(i -> {
@@ -37,15 +40,30 @@ public class Main {
             }
         });
 
+        testVehicle(car);
+
+        MotorbikeHandler.Motorbike motorbike = new MotorbikeHandler.Motorbike(brand, size);
+        IntStream.range(0, names.length).forEachOrdered(i -> {
+            try {
+                motorbike.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        });
+        testVehicle(motorbike);
+    }
+
+    private static void testVehicle(Vehicle vehicle) throws IOException, ClassNotFoundException, DuplicateModelNameException {
         File file = File.createTempFile("vehicle", ".txt");
         try (
                 FileInputStream fis = new FileInputStream(file);
                 FileOutputStream fos = new FileOutputStream(file);
         ) {
-            StreamVehicleUtils.outputVehicle(car, fos);
+            StreamVehicleUtils.outputVehicle(vehicle, fos);
             Vehicle carS = StreamVehicleUtils.inputVehicle(fis);
 
-            compareVehicles(car, carS, "Input/Output");
+            compareVehicles(vehicle, carS, "Input/Output");
         }
 
         file = File.createTempFile("vehicle2", ".txt");
@@ -53,10 +71,10 @@ public class Main {
                 FileReader fr = new FileReader(file);
                 FileWriter fw = new FileWriter(file)
         ) {
-            StreamVehicleUtils.writeVehicle(car, fw);
+            StreamVehicleUtils.writeVehicle(vehicle, fw);
             Vehicle carSR = StreamVehicleUtils.readVehicle(fr);
 
-            compareVehicles(car, carSR, "Reader/Writer");
+            compareVehicles(vehicle, carSR, "Reader/Writer");
         }
 
         file = File.createTempFile("bike", ".txt");
@@ -67,10 +85,10 @@ public class Main {
                 InputStream in = System.in;
                 PrintStream out = System.out;
         ) {
-            StreamVehicleUtils.outputVehicle(car, out);
+            StreamVehicleUtils.outputVehicle(vehicle, out);
             Vehicle carS = StreamVehicleUtils.inputVehicle(in);
             System.setOut(new PrintStream(originalOut));
-            compareVehicles(car, carS, "System.in/System.out");
+            compareVehicles(vehicle, carS, "System.in/System.out");
         }
 
         serializeVehicles();
