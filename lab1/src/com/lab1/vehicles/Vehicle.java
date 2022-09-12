@@ -5,11 +5,11 @@ import com.lab1.exceptions.NoSuchModelNameException;
 
 public interface Vehicle {
 
-    void setModelName(String oldName, String newName);
+    void setModelName(String oldName, String newName) throws NoSuchModelNameException;
 
     String[] getModelsNames();
 
-    double getModelPriceByName(String name);
+    double getModelPriceByName(String name) throws NoSuchModelNameException;
 
     void setModelPriceByName(String name, double price) throws NoSuchModelNameException;
 

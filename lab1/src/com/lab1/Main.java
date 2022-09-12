@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DuplicateModelNameException, NoSuchModelNameException {
 
         if (args.length != 4) {
             System.out.println("Not enough params");
@@ -49,7 +49,9 @@ public class Main {
         testVehicle(motorbike1);
     }
 
-    private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices) {
+    private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices)
+            throws NoSuchModelNameException, DuplicateModelNameException {
+
         Car car = new Car(brand, size);
         testVehicleByArrays(car, brand, size, names, prices);
 
@@ -61,11 +63,19 @@ public class Main {
         testVehicleByArrays(motorbike, brand, size, names, prices);
     }
 
-    private static void testVehicleByArrays(Vehicle vehicle, String brand, int size,final String[] names, Double[] prices) {
+    private static void testVehicleByArrays(Vehicle vehicle, String brand, int size,final String[] names, Double[] prices)
+            throws NoSuchModelNameException,DuplicateModelNameException {
+
         assert vehicle.getModelsNum() == size;
         assert vehicle.getBrand().equals(brand);
 
-        IntStream.range(0, names.length).forEachOrdered(i -> vehicle.addModel(names[i], prices[i]));
+        IntStream.range(0, names.length).forEachOrdered(i -> {
+            try {
+                vehicle.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+            }
+        });
         String[] vNames = vehicle.getModelsNames();
         Double[] vPrices = vehicle.getModelsPrices();
         IntStream.range(0, names.length).forEachOrdered(i -> {
@@ -124,7 +134,7 @@ public class Main {
 
     }
 
-    private static void testVehicle(Vehicle vehicle) {
+    private static void testVehicle(Vehicle vehicle) throws DuplicateModelNameException, NoSuchModelNameException {
         System.out.println("Testing vehicles " + vehicle.getBrand());
         vehicle.addModel("vesta", 100000.0);
         vehicle.addModel("x-ray", 150000.0);

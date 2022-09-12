@@ -31,7 +31,7 @@ public class Car implements Vehicle, Serializable {
         this.brand = brand;
     }
 
-    public void setModelName(String oldName, String newName) {
+    public void setModelName(String oldName, String newName) throws NoSuchModelNameException {
         Optional<Model> model = findModelByName(oldName);
         model.orElseThrow(() -> new NoSuchModelNameException(oldName)).name = newName;
     }
@@ -100,7 +100,7 @@ public class Car implements Vehicle, Serializable {
         return Arrays.stream(models).filter(m -> m.name != null).map(m -> m.price).toArray(Double[]::new);
     }
 
-    private Optional<Model> findModelByName(String name) {
+    private Optional<Model> findModelByName(String name)  {
         return Arrays.stream(models).filter(m -> m.name != null).filter(m -> m.name.equals(name)).findFirst();
     }
 
