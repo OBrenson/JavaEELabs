@@ -18,8 +18,9 @@ public class StreamVehicleUtils extends VehicleUtils {
             dos.write(vehicle.getBrand().getBytes());
             dos.writeInt(vehicle.getModelsNum());
             for (String name : vehicle.getModelsNames()) {
-                dos.writeInt(name.getBytes().length);
-                dos.write(name.getBytes());
+                String n = name == null ? "" : name;
+                dos.writeInt(n.getBytes().length);
+                dos.write(n.getBytes());
             }
             for (Double price : vehicle.getModelsPrices()) {
                 dos.writeDouble(price);

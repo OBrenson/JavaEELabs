@@ -85,7 +85,7 @@ public class MotorbikeHandler implements InvocationHandler {
 
         public String[] getModelsNames() {
             String[] names = getArray(String.class, m -> m.name);
-            return Arrays.stream(names).filter(Objects::nonNull).toArray(String[]::new);
+            return Arrays.stream(names).map(n -> n == null ? "" : n).toArray(String[]::new);
         }
 
         public double getModelPriceByName(String name) throws NoSuchModelNameException {
@@ -103,7 +103,7 @@ public class MotorbikeHandler implements InvocationHandler {
 
         public Double[] getModelsPrices() {
             Double[] prices = getArray(Double.class, m -> m.price);
-            return Arrays.stream(prices).filter(Objects::nonNull).toArray(Double[]::new);
+            return Arrays.stream(prices).toArray(Double[]::new);
         }
 
         public void addModel(String name, double price) throws DuplicateModelNameException {
@@ -122,7 +122,7 @@ public class MotorbikeHandler implements InvocationHandler {
 
                     Model node = head;
                     do {
-                        if (node.name.equals("")) {
+                        if (node.name == null) {
                             node.name = name;
                             node.price = price;
                             return;
@@ -143,7 +143,7 @@ public class MotorbikeHandler implements InvocationHandler {
         }
 
         public void deleteModel(String name) throws NoSuchModelNameException {
-            if (head == null) {
+            if (head.name == null) {
                 throw new NoSuchModelNameException(name);
             }
             Model node = findModelByName(name);
@@ -181,12 +181,12 @@ public class MotorbikeHandler implements InvocationHandler {
         }
 
         private Model findModelByName(String name) throws NoSuchModelNameException {
-            if (head == null || name.equals("")) {
+            if (head.name == null) {
                 throw new NoSuchModelNameException(name);
             }
             Model node = head;
             do {
-                if (node.name != null && node.name.equals(name)) {
+                if (node.name != null && !node.name.equals("") && node.name.equals(name)) {
                     return node;
                 }
                 node = node.next;
@@ -203,7 +203,6 @@ public class MotorbikeHandler implements InvocationHandler {
             }
 
             public Model() {
-                name = "";
                 price = 0.0;
             }
 

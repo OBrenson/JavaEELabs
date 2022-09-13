@@ -34,22 +34,22 @@ public class Main {
         }
 
         testVehicleFromArgs(brand, size, names, prices);
-//        Car car = new Car("lada", 1);
-//        testVehicle(car);
-//        car = new Car("lada-plus", 10);
-//        testVehicle(car);
-//
-//        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
-//                MotorbikeHandler.Motorbike.class.getClassLoader(),
-//                MotorbikeHandler.Motorbike.class.getInterfaces(),
-//                new MotorbikeHandler("yamaha", 1));
-//        testVehicle(motorbike);
-//
-//        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
-//                MotorbikeHandler.Motorbike.class.getClassLoader(),
-//                MotorbikeHandler.Motorbike.class.getInterfaces(),
-//                new MotorbikeHandler("yamaha", 10));
-//        testVehicle(motorbike1);
+        Car car = new Car("lada", 1);
+        testVehicle(car);
+        car = new Car("lada-plus", 10);
+        testVehicle(car);
+
+        Vehicle motorbike = (Vehicle) Proxy.newProxyInstance(
+                MotorbikeHandler.Motorbike.class.getClassLoader(),
+                MotorbikeHandler.Motorbike.class.getInterfaces(),
+                new MotorbikeHandler("yamaha", 1));
+        testVehicle(motorbike);
+
+        Vehicle motorbike1 = (Vehicle) Proxy.newProxyInstance(
+                MotorbikeHandler.Motorbike.class.getClassLoader(),
+                MotorbikeHandler.Motorbike.class.getInterfaces(),
+                new MotorbikeHandler("yamaha", 10));
+        testVehicle(motorbike1);
     }
 
     private static void testVehicleFromArgs(String brand, int size, String[] names, Double[] prices)
