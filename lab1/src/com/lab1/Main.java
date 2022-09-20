@@ -29,6 +29,9 @@ public class Main {
             System.out.println("Number of prices and names must be equal");
             return;
         }
+        if (Arrays.asList(names).contains("")) {
+            System.out.println("Empty names are not allowed");
+        }
 
         testVehicleFromArgs(brand, size, names, prices);
         Car car = new Car("lada", 1);
@@ -66,6 +69,7 @@ public class Main {
     private static void testVehicleByArrays(Vehicle vehicle, String brand, int size,final String[] names, Double[] prices)
             throws NoSuchModelNameException,DuplicateModelNameException {
 
+        System.out.println(vehicle instanceof Car ? "Car" : "Motorbike");
         assert vehicle.getModelsNum() == size;
         assert vehicle.getBrand().equals(brand);
 
@@ -131,7 +135,6 @@ public class Main {
             isException = true;
         }
         assert isException;
-
     }
 
     private static void testVehicle(Vehicle vehicle) throws DuplicateModelNameException, NoSuchModelNameException {

@@ -6,32 +6,67 @@ import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, DuplicateModelNameException {
-        String[] names = new String[]{"Car1", "Car2", "Car3", "Car4"};
-        Double[] prices = new Double[]{100., 200., 300., 400.,};
-        Car car = new Car("vlada", 4);
+        if (args.length != 4) {
+            System.out.println("Not enough params");
+            return;
+        }
+
+        String brand = args[0];
+        int size = Integer.parseInt(args[1]);
+        String[] names = args[2].split(",");
+        Double[] prices = Arrays.stream(args[3].split(",")).map(Double::parseDouble).toArray(Double[]::new);
+        if (names.length != prices.length) {
+            System.out.println("Number of prices and names must be equal");
+            return;
+        }
+        if (Arrays.asList(names).contains("")) {
+            System.out.println("Empty names are not allowed");
+        }
+
+        Car car = new Car(brand, size);
         IntStream.range(0, names.length).forEachOrdered(i -> {
             try {
                 car.addModel(names[i], prices[i]);
             } catch (DuplicateModelNameException e) {
                 e.printStackTrace();
+                System.exit(1);
             }
         });
 
+        testVehicle(car);
+
+        MotorbikeHandler.Motorbike motorbike = new MotorbikeHandler.Motorbike(brand, size);
+        IntStream.range(0, names.length).forEachOrdered(i -> {
+            try {
+                motorbike.addModel(names[i], prices[i]);
+            } catch (DuplicateModelNameException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        });
+        testVehicle(motorbike);
+
+        serializeVehicles(car);
+        serializeVehicles(motorbike);
+    }
+
+    private static void testVehicle(Vehicle vehicle) throws IOException, ClassNotFoundException, DuplicateModelNameException {
         File file = File.createTempFile("vehicle", ".txt");
         try (
                 FileInputStream fis = new FileInputStream(file);
                 FileOutputStream fos = new FileOutputStream(file);
         ) {
-            StreamVehicleUtils.outputVehicle(car, fos);
+            StreamVehicleUtils.outputVehicle(vehicle, fos);
             Vehicle carS = StreamVehicleUtils.inputVehicle(fis);
 
-            compareVehicles(car, carS, "Input/Output");
+            compareVehicles(vehicle, carS, "Input/Output");
         }
 
         file = File.createTempFile("vehicle2", ".txt");
@@ -39,10 +74,10 @@ public class Main {
                 FileReader fr = new FileReader(file);
                 FileWriter fw = new FileWriter(file)
         ) {
-            StreamVehicleUtils.writeVehicle(car, fw);
+            StreamVehicleUtils.writeVehicle(vehicle, fw);
             Vehicle carSR = StreamVehicleUtils.readVehicle(fr);
 
-            compareVehicles(car, carSR, "Reader/Writer");
+            compareVehicles(vehicle, carSR, "Reader/Writer");
         }
 
         file = File.createTempFile("bike", ".txt");
@@ -53,67 +88,30 @@ public class Main {
                 InputStream in = System.in;
                 PrintStream out = System.out;
         ) {
-            StreamVehicleUtils.outputVehicle(car, out);
+            StreamVehicleUtils.outputVehicle(vehicle, out);
             Vehicle carS = StreamVehicleUtils.inputVehicle(in);
             System.setOut(new PrintStream(originalOut));
-            compareVehicles(car, carS, "System.in/System.out");
+            compareVehicles(vehicle, carS, "System.in/System.out");
         }
-
-        serializeVehicles();
     }
 
-    private static void serializeVehicles() throws IOException, ClassNotFoundException {
-        String[] names = new String[]{"Car1", "Car2", "Car3", "Car4"};
-        Double[] prices = new Double[]{100., 200., 300., 400.,};
-        Car car = new Car("vlada", 4);
-        IntStream.range(0, names.length).forEachOrdered(i -> {
-            try {
-                car.addModel(names[i], prices[i]);
-            } catch (DuplicateModelNameException e) {
-                e.printStackTrace();
-            }
-        });
-
+    private static void serializeVehicles(Vehicle vehicle)
+            throws IOException, ClassNotFoundException
+    {
         File file = File.createTempFile("car", ".txt");
 
         try (
                 FileOutputStream fos = new FileOutputStream(file);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
         ) {
-            oos.writeObject(car);
+            oos.writeObject(vehicle);
 
             try (
                     FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis);)
             {
                 Vehicle carS = (Vehicle) ois.readObject();
-                compareVehicles(car, carS, "serialization");
-            }
-        }
-
-        MotorbikeHandler.Motorbike motorbike = new MotorbikeHandler.Motorbike("bike", 1);
-        IntStream.range(0, names.length).forEachOrdered(i -> {
-            try {
-                motorbike.addModel(names[i], prices[i]);
-            } catch (DuplicateModelNameException e) {
-                e.printStackTrace();
-            }
-        });
-
-        file = File.createTempFile("bike", ".txt");
-
-        try (
-                FileOutputStream fos = new FileOutputStream(file);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-        ) {
-            oos.writeObject(motorbike);
-
-            try (
-                    FileInputStream fis = new FileInputStream(file);
-                    ObjectInputStream ois = new ObjectInputStream(fis);)
-            {
-                Vehicle motorbikeS = (Vehicle) ois.readObject();
-                compareVehicles(motorbike, motorbikeS, "serialization");
+                compareVehicles(vehicle, carS, "serialization");
             }
         }
     }
@@ -142,7 +140,7 @@ public class Main {
         }
 
         System.out.println(streamName);
-
+        System.out.println(carO instanceof Car ? "Car" : "Motorbike");
         System.out.println("Original vehicle:");
         System.out.println(carO.getBrand());
         StreamVehicleUtils.printModelsNamesAndPrices(carO);

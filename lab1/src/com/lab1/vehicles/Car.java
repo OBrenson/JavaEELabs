@@ -37,7 +37,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public String[] getModelsNames() {
-        return Arrays.stream(models).map(m -> m.name).toArray(String[]::new);
+        return Arrays.stream(models).map(m -> m.name == null ? "" : m.name).toArray(String[]::new);
     }
 
     public double getModelPriceByName(String name) throws NoSuchModelNameException {
@@ -46,7 +46,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public void setModelPriceByName(String name, double price) throws NoSuchModelNameException {
-        if (price <= 0) {
+        if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
         Optional<Model> model = findModelByName(name);
@@ -54,14 +54,14 @@ public class Car implements Vehicle, Serializable {
     }
 
     public void addModel(String name, double price) throws DuplicateModelNameException {
-        if (price <= 0) {
+        if (price < 0) {
             throw new ModelPriceOutOfBoundsException();
         }
-        if (Arrays.stream(this.models).anyMatch(m -> m.name.equals(name))) {
+        if (Arrays.stream(this.models).anyMatch(m -> m.name != null && !m.name.equals("") && m.name.equals(name))) {
             throw new DuplicateModelNameException(name);
         }
         for (int i = 0; i < this.models.length; i++) {
-            if (models[i].name.equals("")) {
+            if (models[i].name == null) {
                 models[i].name = name;
                 models[i].price = price;
                 return;
@@ -75,7 +75,7 @@ public class Car implements Vehicle, Serializable {
     public void deleteModel(String name) throws NoSuchModelNameException {
         OptionalInt modelIndex = IntStream.range(0, this.models.length)
                 .filter(i -> {
-                    if (this.models[i] != null) {
+                    if (this.models[i].name != null) {
                         return this.models[i].name.equals(name);
                     }
                     return false;
@@ -97,7 +97,7 @@ public class Car implements Vehicle, Serializable {
     }
 
     public Double[] getModelsPrices() {
-        return Arrays.stream(models).filter(m -> m.name != null).map(m -> m.price).toArray(Double[]::new);
+        return Arrays.stream(models).map(m -> m.price).toArray(Double[]::new);
     }
 
     private Optional<Model> findModelByName(String name)  {
@@ -112,7 +112,6 @@ public class Car implements Vehicle, Serializable {
         }
 
         public Model() {
-            name = "";
             price = 0.0;
         }
 
