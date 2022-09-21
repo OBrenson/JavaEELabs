@@ -1,8 +1,8 @@
-package com.lab3.threads;
+package com.lab3.threads.sync;
 
 import com.lab1.vehicles.Vehicle;
 
-public class NamesSyncPrinter extends SyncPrinter{
+public class NamesSyncPrinter extends SyncPrinter {
 
     public NamesSyncPrinter(Vehicle vehicle, TransportSynchronizer synchronizer) {
         super(vehicle, synchronizer);

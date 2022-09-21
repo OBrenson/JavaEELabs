@@ -1,4 +1,4 @@
-package com.lab3.threads;
+package com.lab3.threads.sync;
 
 import com.lab1.vehicles.Vehicle;
 
