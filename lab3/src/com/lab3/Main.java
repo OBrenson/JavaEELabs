@@ -4,14 +4,10 @@ import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.vehicles.Car;
 import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
-import com.lab3.threads.lock.LockNamesPrinter;
-import com.lab3.threads.lock.LockPricesPrinter;
-import com.lab3.threads.sync.NamesSyncPrinter;
-import com.lab3.threads.sync.PricesSyncPrinter;
-import com.lab3.threads.sync.TransportSynchronizer;
+import com.lab3.threads.executors.NamesExecsPrinter;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -38,16 +34,34 @@ public class Main {
 //        s1.start();
 //        s2.start();
 
-        System.out.println("------locker-------");
-        ReentrantLock rl = new ReentrantLock();
-        LockNamesPrinter lnp = new LockNamesPrinter(vehicle, rl);
-        LockPricesPrinter lpp = new LockPricesPrinter(vehicle, rl);
+//        System.out.println("------locker-------");
+//        ReentrantLock rl = new ReentrantLock();
+//        LockNamesPrinter lnp = new LockNamesPrinter(vehicle, rl);
+//        LockPricesPrinter lpp = new LockPricesPrinter(vehicle, rl);
+//
+//        Thread ss1 = new Thread(lnp);
+//        Thread ss2 = new Thread(lpp);
+//
+//        ss1.start();
+//        ss2.start();
 
-        Thread ss1 = new Thread(lnp);
-        Thread ss2 = new Thread(lpp);
+        System.out.println("------executors-------");
+        Vehicle exec1 = generateVehicle("exec1", 100, true);
+        Vehicle exec2 = generateVehicle("exec2", 1000, true);
+        Vehicle exec3 = generateVehicle("exec3", 200, true);
+        Vehicle exec4 = generateVehicle("exec4", 300, true);
 
-        ss1.start();
-        ss2.start();
+        NamesExecsPrinter execsPrinter1 = new NamesExecsPrinter(exec1);
+        NamesExecsPrinter execsPrinter2 = new NamesExecsPrinter(exec2);
+        NamesExecsPrinter execsPrinter3 = new NamesExecsPrinter(exec3);
+        NamesExecsPrinter execsPrinter4 = new NamesExecsPrinter(exec4);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor.execute(execsPrinter1);
+        executor.execute(execsPrinter2);
+        executor.execute(execsPrinter3);
+        executor.execute(execsPrinter4);
+        executor.shutdown();
     }
 
     public static Vehicle generateVehicle(String prefix, int num, boolean isCar) throws DuplicateModelNameException {
