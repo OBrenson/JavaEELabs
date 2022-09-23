@@ -1,0 +1,7 @@
+.button {
+    -fx-font-size: 20;
+    -fx-pref-width: 60;
+}
+.text-field {
+    -fx-font-size: 30px;
+}

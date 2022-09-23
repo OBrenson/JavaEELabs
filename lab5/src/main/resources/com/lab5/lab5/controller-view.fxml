@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TextField?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.lab5.lab5.CalculatorController">
+    <VBox alignment="TOP_CENTER">
+        <TextField fx:id="textField" alignment="CENTER_RIGHT"/>
+        <VBox.margin>
+            <Insets>
+                <top>70</top>
+                <left>10</left>
+                <right>10</right>
+            </Insets>
+        </VBox.margin>
+        <HBox>
+            <StackPane.margin>
+                <Insets top="100.0"/>
+            </StackPane.margin>
+            <VBox>
+                <Button text="7" onAction="#onDigit"/>
+                <Button text="4" onAction="#onDigit"/>
+                <Button text="1" onAction="#onDigit"/>
+            </VBox>
+            <VBox>
+                <Button text="8" onAction="#onDigit"/>
+                <Button text="5" onAction="#onDigit"/>
+                <Button text="2" onAction="#onDigit"/>
+                <Button text="0" onAction="#onDigit"/>
+            </VBox>
+            <VBox>
+                <Button text="9" onAction="#onDigit"/>
+                <Button text="6" onAction="#onDigit"/>
+                <Button text="3" onAction="#onDigit"/>
+            </VBox>
+            <HBox>
+                <HBox.margin>
+                    <Insets>
+                        <left>10</left>
+                    </Insets>
+                </HBox.margin>
+                <VBox>
+                    <Button text="+/-" onAction="#onOperation"/>
+                    <Button text="x^y" onAction="#onOperation"/>
+                    <Button text="-" onAction="#onOperation"/>
+                    <Button text="*" onAction="#onOperation"/>
+                    <Button text="C" onAction="#onOperation"/>
+                </VBox>
+                <VBox>
+                    <Button text="=" onAction="#onOperation"/>
+                    <Button text="+" onAction="#onOperation"/>
+                    <Button text="/" onAction="#onOperation"/>
+                    <Button text="√" onAction="#onOperation"/>
+                </VBox>
+            </HBox>
+        </HBox>
+    </VBox>
+</VBox>
