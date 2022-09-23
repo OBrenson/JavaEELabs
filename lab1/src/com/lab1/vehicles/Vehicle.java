@@ -7,7 +7,7 @@ public interface Vehicle {
 
     String s = "";
 
-    void setModelName(String oldName, String newName) throws NoSuchModelNameException;
+    void setModelName(String oldName, String newName) throws NoSuchModelNameException, DuplicateModelNameException;
 
     String[] getModelsNames();
 

@@ -31,7 +31,11 @@ public class Car implements Vehicle, Serializable {
         this.brand = brand;
     }
 
-    public void setModelName(String oldName, String newName) throws NoSuchModelNameException {
+    public void setModelName(String oldName, String newName) throws NoSuchModelNameException, DuplicateModelNameException {
+        Optional<Model> nModel = findModelByName(newName);
+        if (nModel.isPresent()) {
+            throw new DuplicateModelNameException(newName);
+        }
         Optional<Model> model = findModelByName(oldName);
         model.orElseThrow(() -> new NoSuchModelNameException(oldName)).name = newName;
     }

@@ -76,27 +76,26 @@ public class StreamVehicleUtils extends VehicleUtils {
     }
 
     public static void writeVehicle(Vehicle vehicle, Writer out) {
-        try (PrintWriter pw = new PrintWriter(out)) {
+        //try (PrintWriter pw = new PrintWriter(out)) {
+        PrintWriter pw = new PrintWriter(out);
             pw.println(vehicle instanceof Car);
 
-            pw.println(vehicle.getBrand().length());
-            pw.write(vehicle.getBrand().toCharArray());
+            pw.println(vehicle.getBrand());
 
             pw.println(vehicle.getModelsNum());
 
             for (String n : vehicle.getModelsNames()) {
-                pw.println(n.length());
-                pw.write(n.toCharArray());
+                pw.println(n);
             }
 
             for (Double p : vehicle.getModelsPrices()) {
                 pw.println(p);
             }
-        }
+       // }
     }
 
     public static Vehicle readVehicle(Reader in) throws IOException,DuplicateModelNameException {
-        char[] brand;
+        String brand;
         int modelsNum = 0;
         String[] names;
         Double[] prices;
@@ -106,19 +105,14 @@ public class StreamVehicleUtils extends VehicleUtils {
 
         isCar = Boolean.parseBoolean(br.readLine());
 
-        int charNum = Integer.parseInt(br.readLine());
-        brand = new char[charNum];
-        br.read(brand);
+        brand = br.readLine();
 
         modelsNum = Integer.parseInt(br.readLine());
 
         int index = 0;
         names = new String[modelsNum];
         while (index != modelsNum) {
-            charNum = Integer.parseInt(br.readLine());
-            char[] name = new char[charNum];
-            br.read(name);
-            names[index] = new String(name);
+            names[index] = br.readLine();
             index++;
         }
 
@@ -131,9 +125,9 @@ public class StreamVehicleUtils extends VehicleUtils {
 
         Vehicle result;
         if (isCar) {
-            result = new Car(new String(brand), modelsNum);
+            result = new Car(brand, modelsNum);
         } else {
-            result = new MotorbikeHandler.Motorbike(new String(brand), modelsNum);
+            result = new MotorbikeHandler.Motorbike(brand, modelsNum);
         }
         for (int i = 0; i < modelsNum; i++) {
             result.addModel(names[i], prices[i]);

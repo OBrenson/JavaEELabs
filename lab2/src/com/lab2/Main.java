@@ -58,6 +58,9 @@ public class Main {
     }
 
     private static void testVehicle(Vehicle vehicle) throws IOException, ClassNotFoundException, DuplicateModelNameException {
+//        Vehicle carIn = StreamVehicleUtils.readVehicle(new InputStreamReader(System.in));
+//        StreamVehicleUtils.writeVehicle(carIn, new OutputStreamWriter(System.out));
+//        StreamVehicleUtils.printModelsNamesAndPrices(carIn);
         File file = File.createTempFile("vehicle", ".txt");
         try (
                 FileInputStream fis = new FileInputStream(file);
@@ -75,24 +78,33 @@ public class Main {
                 FileWriter fw = new FileWriter(file)
         ) {
             StreamVehicleUtils.writeVehicle(vehicle, fw);
+            fw.close();
             Vehicle carSR = StreamVehicleUtils.readVehicle(fr);
 
             compareVehicles(vehicle, carSR, "Reader/Writer");
         }
-
-        file = File.createTempFile("bike", ".txt");
         OutputStream originalOut = System.out;
-        System.setIn(new FileInputStream(file));
-        System.setOut(new PrintStream(new FileOutputStream(file)));
-        try (
-                InputStream in = System.in;
-                PrintStream out = System.out;
-        ) {
-            StreamVehicleUtils.outputVehicle(vehicle, out);
-            Vehicle carS = StreamVehicleUtils.inputVehicle(in);
-            System.setOut(new PrintStream(originalOut));
-            compareVehicles(vehicle, carS, "System.in/System.out");
-        }
+
+        Vehicle carIn = StreamVehicleUtils.readVehicle(new InputStreamReader(System.in));
+        StreamVehicleUtils.writeVehicle(carIn, new OutputStreamWriter(System.out));
+        //System.setOut(new PrintStream(originalOut));
+        System.out.println(carIn instanceof Car ? "Car" : "Motorbike");
+        System.out.println(carIn.getBrand());
+        StreamVehicleUtils.printModelsNamesAndPrices(carIn);
+
+//        file = File.createTempFile("bike", ".txt");
+//        OutputStream originalOut = System.out;
+//        System.setIn(new FileInputStream(file));
+//        System.setOut(new PrintStream(new FileOutputStream(file)));
+//        try (
+//                InputStream in = System.in;
+//                PrintStream out = System.out;
+//        ) {
+//            Vehicle carSR = StreamVehicleUtils.readVehicle(new InputStreamReader(System.in));
+//            StreamVehicleUtils.outputVehicle(vehicle, out);
+//            Vehicle carS = StreamVehicleUtils.inputVehicle(in);
+//            compareVehicles(vehicle, carS, "System.in/System.out");
+//        }
     }
 
     private static void serializeVehicles(Vehicle vehicle)
@@ -135,7 +147,7 @@ public class Main {
         });
 
         if ("serialization".equals(streamName) && carO instanceof MotorbikeHandler.Motorbike) {
-            assert ((MotorbikeHandler.Motorbike) carO).getLastModified() ==
+            assert ((MotorbikeHandler.Motorbike) carO).getLastModified() !=
                     ((MotorbikeHandler.Motorbike) carS).getLastModified();
         }
 

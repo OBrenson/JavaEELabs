@@ -22,13 +22,13 @@ public class MotorbikeHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if(method.getName().contains("set") ||
-                method.getName().contains("add") ||
-                method.getName().contains("delete")) {
-            original.lastModified = new Date().getTime();
-        }
         try {
            Object res = method.invoke(original, args);
+            if(method.getName().contains("set") ||
+                    method.getName().contains("add") ||
+                    method.getName().contains("delete")) {
+                original.lastModified = new Date().getTime();
+            }
            return res;
         } catch (InvocationTargetException | UndeclaredThrowableException e) {
             throw e.getCause();
@@ -41,7 +41,7 @@ public class MotorbikeHandler implements InvocationHandler {
 
         private Model head;
 
-        private long lastModified;
+        private transient long lastModified;
 
         private String brand;
 

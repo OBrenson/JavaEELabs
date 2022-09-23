@@ -32,8 +32,8 @@ public class Main {
         if (Arrays.asList(names).contains("")) {
             System.out.println("Empty names are not allowed");
         }
-
         testVehicleFromArgs(brand, size, names, prices);
+
         Car car = new Car("lada", 1);
         testVehicle(car);
         car = new Car("lada-plus", 10);
@@ -155,6 +155,7 @@ public class Main {
         vehicle.addModel("priora", 200000.0);
         vehicle.addModel("kalina", 250000.0);
         vehicle.addModel("kalina-sport", 300000.0);
+        vehicle.setModelName("kalina123", "priora");
         VehicleUtils.printModelsNamesAndPrices(vehicle);
 
         //assert vehicle.getModelsNum() == 5;
