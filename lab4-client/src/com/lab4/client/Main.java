@@ -7,11 +7,30 @@ import com.lab1.vehicles.Vehicle;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException, DuplicateModelNameException {
         Vehicle vehicle = generateVehicle("car", 10, true);
-        send(6666, vehicle);
+        //send(6666, vehicle);
+        mulSend(vehicle);
+    }
+
+    public static void mulSend(Vehicle vehicle) {
+        ExecutorService es = Executors.newFixedThreadPool(100);
+        for (int i = 0; i < 100; i++) {
+            int finalI = i;
+            es.execute(() -> {
+                try {
+                    send(6666, vehicle);
+                    System.out.println(finalI);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        es.shutdown();
     }
 
     public static void send(int port, Vehicle vehicle) throws IOException, ClassNotFoundException {

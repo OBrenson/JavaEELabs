@@ -4,14 +4,15 @@ import com.lab1.VehicleUtils;
 import com.lab1.vehicles.Vehicle;
 
 import java.io.*;
+import java.net.Socket;
 
 public class VehicleExecutor implements Runnable {
     private final OutputStream outputStream;
     private final InputStream inputStream;
 
-    public VehicleExecutor(OutputStream outputStream, InputStream inputStream) {
-        this.outputStream = outputStream;
-        this.inputStream = inputStream;
+    public VehicleExecutor(Socket socket) throws IOException {
+        this.outputStream = socket.getOutputStream();
+        this.inputStream = socket.getInputStream();
     }
 
     @Override
@@ -25,7 +26,7 @@ public class VehicleExecutor implements Runnable {
             double avr = VehicleUtils.getAverage(vehicle);
             dos.writeDouble(avr);
         } catch (IOException | ClassNotFoundException e) {
-
+            System.out.println(e.getMessage());
         }
     }
 }

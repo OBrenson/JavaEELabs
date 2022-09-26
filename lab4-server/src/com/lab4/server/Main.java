@@ -11,14 +11,8 @@ import java.net.Socket;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        while (true) {
-            try {
-                start(6666);
-            } catch (IOException e) {
-                System.out.println("connection was rejected");
-            }
-        }
+    public static void main(String[] args) throws ClassNotFoundException, IOException {
+        start(6666);
     }
 
     public static void start(int port) throws IOException, ClassNotFoundException {
