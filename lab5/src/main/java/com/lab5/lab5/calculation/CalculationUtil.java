@@ -9,9 +9,14 @@ public class CalculationUtil {
         return automaton.first;
     }
 
-    public static Double next(Double num) throws CalculationException {
+    public static void next(Double num) {
         automaton.nextStep(num);
-        return automaton.first;
+    }
+
+    public static void clear() {
+        automaton.first = null;
+        automaton.second = null;
+        automaton.operation = null;
     }
 
     private static class Automaton {
@@ -20,25 +25,38 @@ public class CalculationUtil {
 
         private Operation operation;
 
-        private Double result;
+        private boolean lastEqual;
 
         private void nextStep(Operation operation) throws CalculationException {
             if (first == null) {
                 return;
             }
-            if (operation == null || second == null) {
+            if (operation == Operation.SQRT) {
+                this.operation = operation;
+                first = executeOperation();
+                this.operation = null;
+                second = null;
+                return;
+            }
+            if (this.operation == null || second == null) {
                 this.operation = operation;
                 return;
             }
-            first = executeOperation();
             if (operation != Operation.EQUAL) {
+                if (!lastEqual) {
+                    first = executeOperation();
+                }
+                lastEqual = false;
                 this.operation = operation;
                 second = null;
+            } else {
+                first = executeOperation();
+                lastEqual = true;
             }
         }
 
         private void nextStep(Double num) {
-            if (first == null) {
+            if (first == null || operation == null) {
                 first = num;
             } else {
                 second = num;
@@ -49,7 +67,7 @@ public class CalculationUtil {
             switch (operation) {
                 case DIV:
                     if (second == 0) {
-                        throw new CalculationException("Can not dev by zero");
+                        throw new CalculationException("dev by zero");
                     }
                     return first/second;
                 case SUM:
@@ -60,13 +78,14 @@ public class CalculationUtil {
                     return first * second;
                 case SQRT:
                     if (first < 0) {
-                        throw new CalculationException("Can not sqrt negative num");
+                        throw new CalculationException("sqrt negative num");
                     }
                     return Math.sqrt(first);
                 case EXPON:
                     return Math.pow(first, second);
+                default:
+                    return first;
             }
-            return null;
         }
     }
 }

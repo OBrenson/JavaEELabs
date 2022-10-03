@@ -26,6 +26,7 @@
                 <Button text="7" onAction="#onDigit"/>
                 <Button text="4" onAction="#onDigit"/>
                 <Button text="1" onAction="#onDigit"/>
+                <Button text="d" onAction="#onRemove"/>
             </VBox>
             <VBox>
                 <Button text="8" onAction="#onDigit"/>
@@ -37,6 +38,7 @@
                 <Button text="9" onAction="#onDigit"/>
                 <Button text="6" onAction="#onDigit"/>
                 <Button text="3" onAction="#onDigit"/>
+                <Button text="." onAction="#onDigit"/>
             </VBox>
             <HBox>
                 <HBox.margin>
@@ -45,11 +47,11 @@
                     </Insets>
                 </HBox.margin>
                 <VBox>
-                    <Button text="+/-" onAction="#onOperation"/>
-                    <Button text="x^y" onAction="#onOperation"/>
+                    <Button text="+/-" onAction="#onSign"/>
+                    <Button text="^" onAction="#onOperation"/>
                     <Button text="-" onAction="#onOperation"/>
                     <Button text="*" onAction="#onOperation"/>
-                    <Button text="C" onAction="#onOperation"/>
+                    <Button text="C" onAction="#onDelete"/>
                 </VBox>
                 <VBox>
                     <Button text="=" onAction="#onOperation"/>

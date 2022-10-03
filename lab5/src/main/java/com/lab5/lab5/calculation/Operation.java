@@ -6,7 +6,7 @@ public enum Operation {
     MINUS("-"),
     MULT("*"),
     SQRT("√"),
-    EXPON("x^y"),
+    EXPON("^"),
     DIV("/");
 
     private final String symbol;
@@ -15,12 +15,12 @@ public enum Operation {
         this.symbol = symbol;
     }
 
-    public Operation getOperation(String symbol) {
+    public static Operation getOperation(String symbol) {
         for (Operation op : Operation.values()) {
             if (symbol.equals(op.symbol)) {
                 return op;
             }
         }
-        throw new RuntimeException("No such element");
+        return null;
     }
 }
