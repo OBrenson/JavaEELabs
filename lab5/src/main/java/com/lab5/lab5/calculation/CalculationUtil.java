@@ -13,6 +13,13 @@ public class CalculationUtil {
         automaton.nextStep(num);
     }
 
+    public static Double changeSign() {
+        if (automaton.second == null) {
+            return automaton.first = -1 * automaton.first;
+        }
+        return null;
+    }
+
     public static void clear() {
         automaton.first = null;
         automaton.second = null;

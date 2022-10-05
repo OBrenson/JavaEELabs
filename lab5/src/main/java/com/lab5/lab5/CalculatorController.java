@@ -85,13 +85,18 @@ public class CalculatorController {
 
     @FXML
     protected void onSign(ActionEvent e) {
-        if(textField.getText().length() != 0) {
-            if (textField.getText().contains("-")) {
-                textField.setText(textField.getText().substring(1));
-            } else {
-                textField.setText("-" + textField.getText());
+        Double res = CalculationUtil.changeSign();
+        if (res != null) {
+            textField.setText(res.toString());
+        } else {
+            if (textField.getText().length() != 0) {
+                if (textField.getText().contains("-")) {
+                    textField.setText(textField.getText().substring(1));
+                } else {
+                    textField.setText("-" + textField.getText());
+                }
+                CalculationUtil.next(Double.parseDouble(textField.getText()));
             }
-            CalculationUtil.next(Double.parseDouble(textField.getText()));
         }
     }
 
