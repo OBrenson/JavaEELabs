@@ -4,12 +4,20 @@ import com.lab1.exceptions.DuplicateModelNameException;
 import com.lab1.vehicles.Car;
 import com.lab1.vehicles.MotorbikeHandler;
 import com.lab1.vehicles.Vehicle;
+import com.lab3.threads.NamesPrinterThread;
+import com.lab3.threads.PricesPrinterThread;
 import com.lab3.threads.executors.NamesExecsPrinter;
+import com.lab3.threads.lock.LockNamesPrinter;
+import com.lab3.threads.lock.LockPricesPrinter;
 import com.lab3.threads.queue.NamesPrinterQueue;
+import com.lab3.threads.sync.NamesSyncPrinter;
+import com.lab3.threads.sync.PricesSyncPrinter;
+import com.lab3.threads.sync.TransportSynchronizer;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -18,7 +26,7 @@ public class Main {
 
     public static void main(String[] args) throws DuplicateModelNameException, InterruptedException {
 
-        Vehicle vehicle = generateVehicle("first", 100, true);
+        Vehicle vehicle = generateVehicle("first", 1000, true);
 //        Thread threadNames = new NamesPrinterThread(vehicle);
 //        Thread threadPrices = new PricesPrinterThread(vehicle);
 //        threadNames.setPriority(Thread.NORM_PRIORITY);
@@ -38,7 +46,7 @@ public class Main {
 //
 //        s1.start();
 //        s2.start();
-
+//
 //        System.out.println("------locker-------");
 //        ReentrantLock rl = new ReentrantLock();
 //        LockNamesPrinter lnp = new LockNamesPrinter(vehicle, rl);

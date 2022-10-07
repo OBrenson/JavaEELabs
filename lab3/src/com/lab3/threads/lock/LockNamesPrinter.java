@@ -13,12 +13,9 @@ public class LockNamesPrinter extends LockPrinter {
     @Override
     public void run() {
         locker.lock();
-        try {
-            for (String name : vehicle.getModelsNames()) {
-                System.out.println(name);
-            }
-        } finally {
-            locker.unlock();
+        for (String name : vehicle.getModelsNames()) {
+            System.out.println(name);
         }
+        locker.unlock();
     }
 }

@@ -14,16 +14,17 @@ public class CalculationUtil {
     }
 
     public static Double changeSign() {
-        if (automaton.second == null) {
-            return automaton.first = -1 * automaton.first;
+        if (automaton.second == null || automaton.lastEqual) {
+            automaton.first = -1 * automaton.first;
+            System.out.println(automaton.first);
+            return automaton.first;
         }
+        System.out.println("null");
         return null;
     }
 
     public static void clear() {
-        automaton.first = null;
-        automaton.second = null;
-        automaton.operation = null;
+        automaton.first = 0.0;
     }
 
     private static class Automaton {

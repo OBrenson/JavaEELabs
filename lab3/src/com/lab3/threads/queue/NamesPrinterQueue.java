@@ -25,8 +25,8 @@ public class NamesPrinterQueue implements Runnable {
             BufferedReader br = new BufferedReader(fr);
         ){
             String brand = br.readLine();
-            queue.put(new Car(brand, 0));
-        } catch (IOException | InterruptedException e) {
+            queue.add(new Car(brand, 0));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -13,12 +13,9 @@ public class LockPricesPrinter extends LockPrinter {
     @Override
     public void run() {
         locker.lock();
-        try {
-            for (Double price : vehicle.getModelsPrices()) {
-                System.out.println(price);
-            }
-        } finally {
-            locker.unlock();
+        for (Double price : vehicle.getModelsPrices()) {
+            System.out.println(price);
         }
+        locker.unlock();
     }
 }

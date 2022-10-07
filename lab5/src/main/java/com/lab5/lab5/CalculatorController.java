@@ -4,12 +4,10 @@ import com.lab5.lab5.calculation.CalculationException;
 import com.lab5.lab5.calculation.CalculationUtil;
 import com.lab5.lab5.calculation.Operation;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-import javafx.scene.input.KeyEvent;
 
 public class CalculatorController {
     @FXML
@@ -35,30 +33,27 @@ public class CalculatorController {
 
     @FXML
     public void initialize() {
-        textField.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-               try {
-                   if (keyEvent.getCharacter().equals("d") || keyEvent.getCharacter().equals("f")) {
-                       throw new NumberFormatException();
-                   }
-                   if(operationExecuted) {
-                       CalculationUtil.next(Double.parseDouble(keyEvent.getCharacter()));
-                       operationExecuted = false;
-                       textField.setText(keyEvent.getCharacter());
-                   } else {
-                       CalculationUtil.next(Double.parseDouble(textField.getText()));
-                   }
-               } catch (NumberFormatException e) {
-                   ((TextInputControl) keyEvent.getSource()).deletePreviousChar();
-
-                   Operation op = Operation.getOperation(keyEvent.getCharacter());
-                   if (op != null) {
-                       executeOperation(op);
-                   }
+        textField.setOnKeyTyped(keyEvent -> {
+           try {
+               if (keyEvent.getCharacter().equals("d") || keyEvent.getCharacter().equals("f")) {
+                   throw new NumberFormatException();
                }
-               textField.positionCaret(textField.getText().length());
-            }
+               if(operationExecuted) {
+                   CalculationUtil.next(Double.parseDouble(keyEvent.getCharacter()));
+                   operationExecuted = false;
+                   textField.setText(keyEvent.getCharacter());
+               } else {
+                   CalculationUtil.next(Double.parseDouble(textField.getText()));
+               }
+           } catch (NumberFormatException e) {
+               ((TextInputControl) keyEvent.getSource()).deletePreviousChar();
+
+               Operation op = Operation.getOperation(keyEvent.getCharacter());
+               if (op != null) {
+                   executeOperation(op);
+               }
+           }
+           textField.positionCaret(textField.getText().length());
         });
 
         textField.textProperty().addListener(
@@ -79,7 +74,7 @@ public class CalculatorController {
 
     @FXML
     protected void onDelete(ActionEvent e) {
-        textField.setText("");
+        textField.setText("0.0");
         CalculationUtil.clear();
     }
 
