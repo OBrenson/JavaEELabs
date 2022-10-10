@@ -10,7 +10,7 @@ public class Queries {
 
     public static final String VARCHAR = "'%s'";
 
-    public static final String DELETE = "DELETE FROM %s WHERE name = '%s'";
+    public static final String DELETE = "DELETE FROM %s WHERE name = ?";
 
     public static final String UPDATE = "UPDATE %s SET %s WHERE name = '%s'";
 

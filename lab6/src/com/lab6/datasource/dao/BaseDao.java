@@ -4,6 +4,7 @@ import com.lab6.datasource.Queries;
 import com.lab6.datasource.domain.BaseEntity;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -17,9 +18,10 @@ public abstract class BaseDao {
     }
 
     public void delete(BaseEntity entity) throws SQLException {
-        Statement statement = connection.createStatement();
-        String query = String.format(Queries.DELETE, tableName, entity.getName());
-        statement.execute(query);
+        String query = String.format(Queries.DELETE, tableName);
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, entity.getName());
+        statement.executeUpdate();
     }
 
     protected void update(String temp, String name) throws SQLException {
