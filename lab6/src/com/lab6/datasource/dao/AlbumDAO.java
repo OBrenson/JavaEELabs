@@ -1,45 +1,49 @@
 package com.lab6.datasource.dao;
 
 import com.lab6.datasource.Queries;
+import com.lab6.datasource.domain.Album;
 import com.lab6.datasource.domain.BaseEntity;
-import com.lab6.datasource.domain.Composition;
-import com.lab6.datasource.domain.Singer;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SignerDao extends BaseDao implements Dao {
+public class AlbumDAO extends BaseDao implements Dao{
 
-    public SignerDao(Connection connection) {
-        super(connection, "signer");
+    public AlbumDAO(Connection connection) {
+        super(connection, "album");
     }
+
 
     @Override
     public void create(BaseEntity entity) throws SQLException {
-        Singer singer = (Singer) entity;
+        Album album = (Album) entity;
         Statement statement = connection.createStatement();
-        String query = String.format(Queries.CREATE, tableName, "name", String.format(Queries.VARCHAR,singer.getName()));
+        String query = String.format(Queries.CREATE, tableName, "name, genre",
+                String.format(Queries.VARCHAR,album.getName()) + "," + String.format(Queries.VARCHAR,album.getGenre()));
         statement.execute(query);
     }
 
     @Override
     public void update(String name, BaseEntity entity) throws SQLException {
-        String temp = String.format("name = '%s'", entity.getName());
+        String temp = String.format("name = '%s', genre = '%s'",
+                entity.getName(),
+                ((Album)entity).getGenre());
         update(temp, name);
     }
 
     @Override
     public BaseEntity get(String name) throws SQLException {
         Statement statement = connection.createStatement();
-        Singer singer = new Singer();
         String query = String.format(Queries.GET, tableName, name);
         ResultSet rs = statement.executeQuery(query);
+        Album res = new Album();
         while (rs.next()) {
-            singer.setName(rs.getString(1));
-            singer.setId(rs.getLong(2));
+            res.setName(rs.getString(1));
+            res.setId(rs.getLong(2));
+            res.setGenre(rs.getString(3));
         }
-        return singer;
+        return res;
     }
 }

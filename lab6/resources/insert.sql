@@ -12,7 +12,7 @@ INSERT INTO composition  (id, name, album_id, duration) VALUES
     (nextval('id_seq'), 'Peaople Are Strange', 10, 250),
     (nextval('id_seq'), 'Hell Bells', 11, 132);
 
-INSERT INTO album  (id, name, album_id) VALUES
+INSERT INTO album  (id, name, genre) VALUES
     (nextval('id_seq'), 'Led Zeppelin III', 'heavy metal'),
     (nextval('id_seq'), 'The Wall', 'progressive rock'),
     (nextval('id_seq'), 'War Pigs', 'hard rock'),

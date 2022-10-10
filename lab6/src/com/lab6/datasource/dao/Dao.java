@@ -8,9 +8,9 @@ public interface Dao {
 
     void create(BaseEntity entity) throws SQLException;
 
-    void update(Long id, BaseEntity entity);
+    void update(String name, BaseEntity entity) throws SQLException;
 
-    void delete(BaseEntity entity);
+    void delete(BaseEntity entity) throws SQLException;
 
-    void get(BaseEntity entity);
+    BaseEntity get(String name) throws SQLException;
 }

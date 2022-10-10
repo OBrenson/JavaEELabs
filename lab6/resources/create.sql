@@ -12,10 +12,12 @@ alter table composition add CONSTRAINT fk_album
 create table signer_album (signer_id bigint not null, album_id bigint not null,
 	CONSTRAINT fk_signer
     FOREIGN KEY(signer_id)
-	REFERENCES signer(id),
+	REFERENCES signer(id)
+	ON DELETE CASCADE,
 	CONSTRAINT album_fk
     FOREIGN KEY(album_id)
-	REFERENCES album(id));
+	REFERENCES album(id)
+	ON DELETE CASCADE);
 
 
 
