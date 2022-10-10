@@ -15,6 +15,9 @@ public class Queries {
     public static final String UPDATE = "UPDATE %s SET %s WHERE name = '%s'";
 
     public static final String CONNECT = "INSERT INTO signer_album(signer_id, album_id) (select s.id, a.id from album a join signer s on a.id <> s.id where s.name = '%s' and a.name = '%s' )";
+
+    public static final String DELETE_CONNECT = "DELETE FROM signer_album where (signer_id, album_id) = (select s.id, a.id from album a join signer s on a.id <> s.id where s.name = '%s' and a.name = '%s' )";
+
 }
 
 

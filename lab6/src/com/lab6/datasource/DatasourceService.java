@@ -40,6 +40,12 @@ public class DatasourceService {
         statement.execute(query);
     }
 
+    public void deleteConnectionSingerAndAlbum(String singerName, String albumName) throws SQLException {
+        String query = String.format(Queries.DELETE_CONNECT, singerName, albumName);
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+    }
+
     public void create(BaseEntity entity) throws SQLException {
         getDao(entity).create(entity);
     }

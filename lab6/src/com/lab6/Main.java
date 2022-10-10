@@ -22,6 +22,7 @@ public class Main {
         test(new Album(), new Album(), ds);
         testComposition(ds);
         ds.connectSignerAndAlbum("The Doors", "War Pigs");
+        ds.deleteConnectionSingerAndAlbum("The Doors", "War Pigs");
     }
 
     private static void testComposition(DatasourceService ds) throws SQLException {
