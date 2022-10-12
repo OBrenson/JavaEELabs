@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>index</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Выполнение операций</h1>
+<div id="input_area">
+    <input id="inputA" title="первое число">
+    <div id="checkboxes_area">
+        <input id="plus" type="checkbox" name="operation" onclick="onlyOne(this)">
+        <label for="plus">+</label><br>
+        <input id="minus" type="checkbox" name="operation" onclick="onlyOne(this)">
+        <label for="minus">-</label><br>
+        <input id="mult" type="checkbox" name="operation" onclick="onlyOne(this)">
+        <label for="mult">*</label><br>
+        <input id="div" type="checkbox" name="operation" onclick="onlyOne(this)">
+        <label for="div">/</label><br>
+    </div>
+    <input id="inputB" title="второе число">
+</div>
+<button id="result_btn">результат</button>
+
+<script src="script.js"></script>
+</body>
+</html>
