@@ -11,19 +11,27 @@ function onlyOne(checkbox) {
     operation = checkbox.id;
 }
 
-const inputA = document.querySelector('#inputA');
-const inputB = document.querySelector('#inputB');
+var inputA;
+var inputB;
+function initIndex() {
+    inputA = document.querySelector('#inputA');
+    inputB = document.querySelector('#inputB');
 
-inputA.addEventListener('change', (e) => {
-    checkIsNum(inputA);
-  });
+    inputA.addEventListener('change', (e) => {
+        checkIsNum(inputA);
+    });
 
-inputB.addEventListener('change', (e) => {
-    checkIsNum(inputB);
-  });
+    inputB.addEventListener('change', (e) => {
+        checkIsNum(inputB);
+    });
+}
 
 function checkIsNum (inp) {
     if(isNaN(inp.value)) {
         inp.value = '';
     }
+}
+
+function test() {
+    console.log(operation);
 }
