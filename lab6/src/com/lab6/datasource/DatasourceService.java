@@ -86,7 +86,7 @@ public class DatasourceService {
 
     private Connection createConnection() throws IOException, SQLException {
         Properties properties = new Properties();
-        FileInputStream fis = new FileInputStream("/Users/19722883-mobile/Desktop/labs/JavaEELabs/lab6/resources/database.properties");
+        FileInputStream fis = new FileInputStream("C:\\Users\\PC\\Desktop\\labs\\JavaEELabs\\lab6\\resources\\database.properties");
         properties.load(fis);
         fis.close();
         String drivers = properties.getProperty("jdbc.drivers");

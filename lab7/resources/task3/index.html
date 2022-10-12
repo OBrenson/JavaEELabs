@@ -4,8 +4,9 @@
     <meta charset=utf-8>
     <title>index</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 </head>
-<body>
+<body onload="initIndex()">
 
 <h1>Выполнение операций</h1>
 <div id="input_area">
@@ -22,8 +23,6 @@
     </div>
     <input id="inputB" title="второе число">
 </div>
-<button id="result_btn">результат</button>
-
-<script src="script.js"></script>
+<button id="result_btn" onclick="checkAndCalculate()">результат</button>
 </body>
 </html>

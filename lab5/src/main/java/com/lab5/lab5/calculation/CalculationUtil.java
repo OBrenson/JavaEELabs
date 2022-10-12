@@ -16,10 +16,8 @@ public class CalculationUtil {
     public static Double changeSign() {
         if (automaton.second == null || automaton.lastEqual) {
             automaton.first = -1 * automaton.first;
-            System.out.println(automaton.first);
             return automaton.first;
         }
-        System.out.println("null");
         return null;
     }
 

@@ -27,7 +27,7 @@ public class Main {
 
     private static void testComposition(DatasourceService ds) throws SQLException {
         Composition composition = new Composition();
-        composition.setAlbumId(26L);
+        composition.setAlbumId(10L);
         composition.setDuration(10);
         test(composition, new Composition(), ds);
     }
