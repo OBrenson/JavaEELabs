@@ -17,7 +17,8 @@ create table signer_album (signer_id bigint not null, album_id bigint not null,
 	CONSTRAINT album_fk
     FOREIGN KEY(album_id)
 	REFERENCES album(id)
-	ON DELETE CASCADE);
+	ON DELETE CASCADE,
+	PRIMARY KEY(signer_id, album_id));
 
 
 
