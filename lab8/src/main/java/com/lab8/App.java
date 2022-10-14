@@ -13,19 +13,5 @@ public class App
 {
     public static void main( String[] args )
     {
-        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
-
-        SessionFactory factory = meta.getSessionFactoryBuilder().build();
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-
-        Singer s = new Singer.SingerBuilder("lol").build();
-
-        session.save(s);
-        t.commit();
-        System.out.println("successfully saved");
-        factory.close();
-        session.close();
     }
 }
