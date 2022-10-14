@@ -1,5 +1,8 @@
 package com.lab8;
 
+import com.lab8.dao.DaoService;
+import com.lab8.domain.Album;
+import com.lab8.domain.Composition;
 import com.lab8.domain.Singer;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -11,6 +14,8 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+import java.util.List;
 
 /**
  * Unit test for simple App.
@@ -41,20 +46,24 @@ public class AppTest
      */
     public void testApp()
     {
-        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+        DaoService daoService = new DaoService();
+        DataUtil.insertData(daoService);
+        Singer s = daoService.findByName("Led Zeppelin", Singer.class);
+        System.out.println(s);
+        s.setName("NeW " + s.getName());
+        daoService.update(s);
+        s = daoService.findByName(s.getName(), Singer.class);
+        System.out.println(s);
+        daoService.delete(s);
+        s = daoService.findByName(s.getName(), Singer.class);
+        assert s == null;
 
-        SessionFactory factory = meta.getSessionFactoryBuilder().build();
-        Session session = factory.openSession();
-        Transaction t = session.beginTransaction();
-
-        Singer s = new Singer.SingerBuilder("lol").build();
-
-        session.save(s);
-        t.commit();
-        System.out.println("successfully saved");
-        factory.close();
-        session.close();
+        List<Composition> compositions = daoService.findAll(Composition.class);
+        for(Composition c : compositions) {
+            System.out.println(c);
+        }
+        List<Singer> singers = daoService.findAll(Singer.class);
+        System.out.println(singers);
     }
 
 }

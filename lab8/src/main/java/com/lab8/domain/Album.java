@@ -1,18 +1,30 @@
 package com.lab8.domain;
 
+import org.hibernate.annotations.OnDelete;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "album")
+@NamedQueries({
+        @NamedQuery(name = "Album.findByName",
+                query = "SELECT a FROM Album a WHERE a.name = :name"),
+        @NamedQuery(name = "Album.findAll",
+                query = "SELECT a FROM Album a")
+})
 public class Album extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    public Album() {
+        super();
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "singer_id")
     private Singer singer;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)
     private Set<Composition> compositions;
 
     @Column(name = "genre")
@@ -75,5 +87,10 @@ public class Album extends BaseEntity {
         public Album build() {
             return new Album(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Album: \n name: %s \n singer: %s\n genre:%s\n", getName(), singer.getName(), genre);
     }
 }

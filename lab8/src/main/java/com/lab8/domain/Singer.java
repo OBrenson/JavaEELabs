@@ -8,11 +8,19 @@ import java.util.Set;
 @Entity
 @Table(name = "singer")
 @AttributeOverride(name = "name", column = @Column(name = "name", unique = true))
+@NamedQueries({
+        @NamedQuery(name = "Singer.findByName",
+                query = "SELECT a FROM Singer a WHERE a.name = :name"),
+        @NamedQuery(name = "Singer.findAll",
+                query = "SELECT a FROM Singer a")
+})
 public class Singer extends BaseEntity {
 
+    public Singer() {
+        super();
+    }
 
-
-    @OneToMany(mappedBy = "singer")
+    @OneToMany(mappedBy = "singer", cascade = CascadeType.REMOVE)
     Set<Album> albums;
 
     public Set<Album> getAlbums() {
@@ -48,5 +56,10 @@ public class Singer extends BaseEntity {
         public Singer build() {
             return new Singer(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Singer: \n name: %s\n", getName());
     }
 }
