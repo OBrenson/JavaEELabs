@@ -197,7 +197,6 @@ public class MotorbikeHandler implements InvocationHandler {
         private class Model implements Serializable {
 
             public Model(String name, double price) {
-
                 this.name = name;
                 this.price = price;
             }
