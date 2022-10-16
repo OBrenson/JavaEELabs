@@ -4,7 +4,9 @@
 
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
-
+    <listener>
+        <listener-class>com.lab8.servlets.ExpandedServletContextListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>SingersServlet</servlet-name>
         <servlet-class>com.lab8.servlets.SingerServlet</servlet-class>

@@ -46,7 +46,7 @@ public class AppTest
      */
     public void testApp()
     {
-        DaoService daoService = new DaoService();
+        DaoService daoService = DaoService.getDaoService();
         DataUtil.insertData(daoService);
         Singer s = daoService.findByName("Led Zeppelin", Singer.class);
         System.out.println(s);

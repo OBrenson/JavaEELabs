@@ -19,8 +19,19 @@ public class DaoService {
 
     private SessionFactory factory;
 
-    public DaoService() {
-        init();
+    private static DaoService daoService;
+
+    private DaoService() {
+    }
+
+    public static DaoService getDaoService() {
+        if (daoService == null) {
+            daoService = new DaoService();
+            StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+            Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+            daoService.factory = meta.getSessionFactoryBuilder().build();
+        }
+        return daoService;
     }
 
     public void init() {
@@ -31,17 +42,25 @@ public class DaoService {
     }
 
     public <T extends BaseEntity>T findByName(String name, Class<T> clazz) {
-        String queryName = clazz.getName().replace("com.lab8.domain.", "") + ".findByName";
+        return findBy(clazz, "name", name);
+    }
+
+    public <T extends BaseEntity>T findById(Long id, Class<T> clazz) {
+        return findBy(clazz, "id", id);
+    }
+
+    private <T extends BaseEntity>T findBy(Class<T> clazz, String field, Object by) {
+        String queryName = getClazzName(clazz) + ".findBy" + field;
         try (Session session = factory.openSession()) {
             return session.createNamedQuery(queryName, clazz)
-                    .setParameter("name", name).getSingleResult();
+                    .setParameter(field, by).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
     }
 
     public <T extends BaseEntity> List<T> findAll(Class<T> clazz) {
-        String queryName = clazz.getName().replace("com.lab8.domain.", "") + ".findAll";
+        String queryName = getClazzName(clazz) + ".findAll";
         try (Session session = factory.openSession()) {
             return session.createNamedQuery(queryName, clazz).getResultList();
         } catch (NoResultException ex) {
@@ -75,5 +94,9 @@ public class DaoService {
             func.accept(baseEntity, session);
             t.commit();
         }
+    }
+
+    private <T extends BaseEntity>String getClazzName(Class<T> clazz) {
+        return clazz.getName().replace("com.lab8.domain.", "");
     }
 }

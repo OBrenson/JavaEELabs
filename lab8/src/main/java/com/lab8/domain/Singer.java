@@ -9,10 +9,12 @@ import java.util.Set;
 @Table(name = "singer")
 @AttributeOverride(name = "name", column = @Column(name = "name", unique = true))
 @NamedQueries({
-        @NamedQuery(name = "Singer.findByName",
+        @NamedQuery(name = "Singer.findByname",
                 query = "SELECT a FROM Singer a WHERE a.name = :name"),
         @NamedQuery(name = "Singer.findAll",
-                query = "SELECT a FROM Singer a")
+                query = "SELECT a FROM Singer a"),
+        @NamedQuery(name = "Singer.findByid",
+                query = "SELECT a FROM Singer a WHERE a.id = :id")
 })
 public class Singer extends BaseEntity {
 

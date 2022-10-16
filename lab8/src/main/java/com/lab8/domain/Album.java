@@ -20,8 +20,8 @@ public class Album extends BaseEntity {
         super();
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "singer_id")
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Singer.class, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "singer_id", nullable = false)
     private Singer singer;
 
     @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)

@@ -1,12 +1,12 @@
 <html>
-    <h1>Singers</h1>
+    <h1>Compositions</h1>
     <table>
         <tr>
             <th>Name</th>
         </tr>
-        <c:forEach items="${singers}" var="singer">
+        <c:forEach items="${compositions}" var="composition">
             <tr>
-                <td>${singer.name}</td>
+                <td>${composition.name}</td>
             </tr>
         </c:forEach>
     </table>
