@@ -9,18 +9,21 @@ import java.util.Set;
 @Entity
 @Table(name = "album")
 @NamedQueries({
-        @NamedQuery(name = "Album.findByName",
+        @NamedQuery(name = "Album.findByname",
                 query = "SELECT a FROM Album a WHERE a.name = :name"),
         @NamedQuery(name = "Album.findAll",
-                query = "SELECT a FROM Album a")
+                query = "SELECT a FROM Album a"),
+        @NamedQuery(name = "Album.findByid",
+                query = "SELECT a FROM Album a WHERE a.id = :id")
 })
+@AttributeOverride(name = "name", column = @Column(name = "name", unique = true))
 public class Album extends BaseEntity {
 
     public Album() {
         super();
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Singer.class, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Singer.class, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "singer_id", nullable = false)
     private Singer singer;
 

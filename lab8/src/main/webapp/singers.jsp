@@ -23,33 +23,34 @@
                             </td>
                             <td>
                                 <input type = "submit" value = "Save"/>
-                                <c:if test="${singer.name != \"\"}">
-                                    <td><button type="button" id="${singer.id}" class="remove">Remove</button></td>
-                                </c:if>
                             </td>
                         </form>
+                        <c:if test="${singer.name != \"\"}">
+                            <form action="remove" method = "POST">
+                                <td>
+                                    <input type="hidden" name = "id" value="singer=${singer.id}"/>
+                                    <button type="submit" class="remove">Remove</button>
+                                </td>
+                            </form>
+                        </c:if>
                     </tr>
                 </c:forEach>
             </table>
+    <c:if test="${nameException != null && !nameException.equals(\"\")}">
+        <div>Singer with name ${nameException} is already exists</div>
+    </c:if>
+        <form action="compositions" method = "GET">
+            <td>
+                <button type="submit">Compositions</button>
+            </td>
+        </form>
+    <form action="albums" method = "GET">
+        <td>
+            <button type="submit">Albums</button>
+        </td>
+    </form>
     <script>
-        $(document).ready(function() {
-            // crating new click event for save button
-            $(".remove").click(function() {
-                var id = this.id;
-                $.ajax({
-                    url: "singers",
-                    type: "delete",
-                    data: {
-                        id : id,
-                    },
-                    success : function(data){
-                        if (data == 'true') {
-                            location.reload();
-                        }
-                    }
-                });
-            });
-        });
+
     </script>
     </body>
 </html>

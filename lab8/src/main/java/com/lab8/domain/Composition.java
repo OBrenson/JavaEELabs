@@ -1,22 +1,27 @@
 package com.lab8.domain;
 
+import org.hibernate.annotations.Check;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "composition")
 @NamedQueries({
-        @NamedQuery(name = "Composition.findByName",
+        @NamedQuery(name = "Composition.findByname",
                 query = "SELECT a FROM Composition a WHERE a.name = :name"),
         @NamedQuery(name = "Composition.findAll",
-                query = "SELECT a FROM Composition a left join fetch a.album")
+                query = "SELECT a FROM Composition a left join fetch a.album"),
+        @NamedQuery(name = "Composition.findByid",
+                query = "SELECT a FROM Composition a WHERE a.id = :id")
 })
+@Check(constraints = "duration > 0")
 public class Composition extends BaseEntity {
 
     public Composition() {
         super();
     }
 
-    @Column(name = "duration")
+    @Column(name = "duration", nullable = false)
     private Integer duration;
 
     @ManyToOne(fetch = FetchType.LAZY)

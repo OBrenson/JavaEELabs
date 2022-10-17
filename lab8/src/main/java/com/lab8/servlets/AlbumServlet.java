@@ -1,9 +1,9 @@
 package com.lab8.servlets;
 
-import com.lab8.DataUtil;
 import com.lab8.dao.DaoService;
+import com.lab8.domain.Album;
+import com.lab8.domain.Composition;
 import com.lab8.domain.Singer;
-import org.hibernate.exception.ConstraintViolationException;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.RequestDispatcher;
@@ -12,33 +12,39 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @WebServlet(
-        name = "SingerServlet",
-        urlPatterns = {"/singers"}
+        name = "AlbumServlet",
+        urlPatterns = {"/albums"}
 )
-public class SingerServlet extends HttpServlet {
+public class AlbumServlet extends HttpServlet {
 
-    List<Singer> singers = new ArrayList<>();
+    List<Album> albums = new ArrayList<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        singers = DaoService.getDaoService().findAll(Singer.class);
-        singers.add(new Singer.SingerBuilder("").build());
+        albums = DaoService.getDaoService().findAll(Album.class);
+        albums.add(new Album.AlbumBuilder("","", new Singer()).build());
         updatePage(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
-        Singer s = new Singer.SingerBuilder(name).build();
+        String genre = req.getParameter("genre");
+        String singerName = req.getParameter("singerName");
+
+        Singer singer = DaoService.getDaoService().findByName(singerName, Singer.class);
+        if (singer == null) {
+            req.setAttribute("singerException", singerName);
+            updatePage(req, resp);
+            return;
+        }
+        Album a = new Album.AlbumBuilder(name, genre, singer).build();
 
         if (name == null || "".equals(name)) {
             updatePage(req, resp);
@@ -49,25 +55,28 @@ public class SingerServlet extends HttpServlet {
             String idStr = req.getParameter("id");
             if (!"".equals(idStr)) {
                 Long id = Long.parseLong(idStr);
-                s.setId(id);
-                DaoService.getDaoService().update(s);
+                a.setId(id);
+                DaoService.getDaoService().update(a);
             } else {
-                DaoService.getDaoService().save(s);
+                DaoService.getDaoService().save(a);
             }
         } catch (PersistenceException ex) {
             req.setAttribute("nameException", name);
             updatePage(req, resp);
             return;
         }
-        singers = DaoService.getDaoService().findAll(Singer.class);
-        singers.add(new Singer.SingerBuilder("").build());
+
+        albums = DaoService.getDaoService().findAll(Album.class);
+        albums.add(new Album.AlbumBuilder("", "", new Singer()).build());
+
+        req.setAttribute("singerException", null);
         req.setAttribute("nameException", null);
         updatePage(req, resp);
     }
 
     private void updatePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("singers", singers);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/singers.jsp");
+        req.setAttribute("albums", albums);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher("/albums.jsp");
         rd.forward(req, resp);
     }
 }
