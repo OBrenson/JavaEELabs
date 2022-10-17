@@ -29,6 +29,9 @@ public class AlbumServlet extends HttpServlet {
             throws ServletException, IOException {
         albums = DaoService.getDaoService().findAll(Album.class);
         albums.add(new Album.AlbumBuilder("","", new Singer()).build());
+        String[] maxSongs = DaoService.getDaoService().getAlbumWithMaxSongs();
+        req.setAttribute("count", maxSongs[1]);
+        req.setAttribute("maxNames", maxSongs[0]);
         updatePage(req, resp);
     }
 

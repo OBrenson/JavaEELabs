@@ -59,6 +59,9 @@
         <button type="submit">Compositions</button>
     </td>
 </form>
+<h3>Maximum songs num in one album: ${count}</h3>
+<h3>Albums with maximum songs number</h3>
+<p>${maxNames}</p>
 <script>
 
 </script>

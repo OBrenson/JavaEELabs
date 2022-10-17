@@ -10,9 +10,9 @@ import java.util.Set;
 @Table(name = "album")
 @NamedQueries({
         @NamedQuery(name = "Album.findByname",
-                query = "SELECT a FROM Album a WHERE a.name = :name"),
+                query = "SELECT a FROM Album a WHERE a.name = :name "),
         @NamedQuery(name = "Album.findAll",
-                query = "SELECT a FROM Album a"),
+                query = "SELECT a FROM Album a left join fetch a.singer"),
         @NamedQuery(name = "Album.findByid",
                 query = "SELECT a FROM Album a WHERE a.id = :id")
 })
@@ -23,7 +23,7 @@ public class Album extends BaseEntity {
         super();
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Singer.class, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "singer_id", nullable = false)
     private Singer singer;
 

@@ -32,6 +32,7 @@ public class SingerServlet extends HttpServlet {
             throws ServletException, IOException {
         singers = DaoService.getDaoService().findAll(Singer.class);
         singers.add(new Singer.SingerBuilder("").build());
+        req.setAttribute("minDuration", DaoService.getDaoService().getAlbumMinSong());
         updatePage(req, resp);
     }
 

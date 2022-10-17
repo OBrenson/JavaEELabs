@@ -48,6 +48,10 @@ public class AppTest
     {
         DaoService daoService = DaoService.getDaoService();
         DataUtil.insertData(daoService);
+
+        String ams = daoService.getAlbumMinSong();
+        System.out.println(ams);
+
         Singer s = daoService.findByName("Led Zeppelin", Singer.class);
         System.out.println(s);
         s.setName("NeW " + s.getName());

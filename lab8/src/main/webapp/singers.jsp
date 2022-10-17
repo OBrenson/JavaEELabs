@@ -49,6 +49,8 @@
             <button type="submit">Albums</button>
         </td>
     </form>
+    <h2>Singers' songs with minimal duration</h2>
+    <p>${minDuration}</p>
     <script>
 
     </script>

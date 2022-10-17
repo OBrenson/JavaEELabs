@@ -2,6 +2,7 @@ package com.lab8.dao;
 
 import com.lab8.DataUtil;
 import com.lab8.domain.BaseEntity;
+import com.lab8.domain.Singer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -11,8 +12,10 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import javax.persistence.NoResultException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class DaoService {
@@ -32,13 +35,6 @@ public class DaoService {
             daoService.factory = meta.getSessionFactoryBuilder().build();
         }
         return daoService;
-    }
-
-    public void init() {
-        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
-        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
-
-        factory = meta.getSessionFactoryBuilder().build();
     }
 
     public <T extends BaseEntity>T findByName(String name, Class<T> clazz) {
@@ -86,6 +82,38 @@ public class DaoService {
                     s.delete(be);
                 }
         );
+    }
+
+    public String getAlbumMinSong() {
+        List<Object[]> res;
+        try(Session session = factory.openSession()) {
+            res = session.createNativeQuery("select s.name, min(a.name) as al, min(c.duration) as dur from singer s " +
+                    "left join album a on s.id = a.singer_id left join composition c on c.album_id = a.id group by s.name")
+                    .getResultList();
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object[]o : res) {
+            stringBuilder.append(String.format("Singer: %s, Album: %s, Duration: %s </br>", o[0], o[1], o[2]));
+        }
+        return stringBuilder.toString();
+    }
+
+    public String[] getAlbumWithMaxSongs() {
+        List<Object[]> res;
+        try(Session session = factory.openSession()) {
+            res = session.createNativeQuery("select an,cn from (select a.name as an, count (c.name) as cn " +
+                    "from album a left join composition c on a.id = c.album_id group by a.name) an " +
+                    "where cn = (select max(sub.co) from (select count(c.name) as co from album a " +
+                    "left join composition c on a.id = c.album_id group by a.name) sub)").getResultList();
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Object[]o : res) {
+            stringBuilder.append(String.format("%s </br>", o[0]));
+        }
+        String[] resStr = new String[2];
+        resStr[0] = stringBuilder.toString();
+        resStr[1] = String.valueOf(res.get(0)[1]);
+        return resStr;
     }
 
     private <T extends BaseEntity> void execTransaction(T baseEntity, BiConsumer<T, Session> func) {
