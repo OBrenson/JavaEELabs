@@ -3,6 +3,8 @@
 <html>
 <head>
     <link rel="stylesheet"  href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="script.js"></script>
     <meta charset="UTF-8" />
 </head>
 <body>
@@ -17,7 +19,7 @@
     </tr>
     <c:forEach items="${albums}" var="album">
         <tr>
-            <form action = "albums" method = "POST">
+            <form action = "albums" method = "POST" autocomplete="off">
                 <td>
                     <input type="hidden" name="id" value="${album.id}"/>
                     <input type="text" value="${album.name}" name="name" />
@@ -26,7 +28,9 @@
                     <input type="text" value="${album.genre}" name="genre" />
                 </td>
                 <td>
-                    <input type="text" value="${album.singer.name}" name="singerName" />
+                    <input type="text" id="${album.id == null ? "emp" : album.id}"
+                    value="${album.singer.name}"  class="autoComplete" name="singerName" />
+                    <div id="suggesstion-box${album.id == null ? "emp" : album.id}" style="position: absolute"></div>
                 </td>
                 <td>
                     <input type = "submit" value = "Save"/>
@@ -63,7 +67,7 @@
 <h3>Albums with maximum songs number</h3>
 <p>${maxNames}</p>
 <script>
-
+    $(document).ready(auto("Singer"));
 </script>
 </body>
 </html>

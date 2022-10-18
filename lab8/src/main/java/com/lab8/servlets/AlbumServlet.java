@@ -2,7 +2,6 @@ package com.lab8.servlets;
 
 import com.lab8.dao.DaoService;
 import com.lab8.domain.Album;
-import com.lab8.domain.Composition;
 import com.lab8.domain.Singer;
 
 import javax.persistence.PersistenceException;
@@ -29,9 +28,6 @@ public class AlbumServlet extends HttpServlet {
             throws ServletException, IOException {
         albums = DaoService.getDaoService().findAll(Album.class);
         albums.add(new Album.AlbumBuilder("","", new Singer()).build());
-        String[] maxSongs = DaoService.getDaoService().getAlbumWithMaxSongs();
-        req.setAttribute("count", maxSongs[1]);
-        req.setAttribute("maxNames", maxSongs[0]);
         updatePage(req, resp);
     }
 
@@ -78,6 +74,9 @@ public class AlbumServlet extends HttpServlet {
     }
 
     private void updatePage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String[] maxSongs = DaoService.getDaoService().getAlbumWithMaxSongs();
+        req.setAttribute("count", maxSongs[1]);
+        req.setAttribute("maxNames", maxSongs[0]);
         req.setAttribute("albums", albums);
         RequestDispatcher rd = getServletContext().getRequestDispatcher("/albums.jsp");
         rd.forward(req, resp);

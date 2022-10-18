@@ -3,6 +3,8 @@
 <html>
 <head>
     <link rel="stylesheet"  href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="script.js"></script>
     <meta charset="UTF-8" />
 </head>
 <body>
@@ -17,7 +19,7 @@
     </tr>
     <c:forEach items="${compositions}" var="composition">
         <tr>
-            <form action = "compositions" method = "POST">
+            <form action = "compositions" method = "POST" autocomplete="off">
                 <td>
                     <input type="hidden" name="id" value="${composition.id}"/>
                     <input type="text" value="${composition.name}" name="name" />
@@ -26,7 +28,9 @@
                     <input type="text" value="${composition.duration}" name="duration" />
                 </td>
                 <td>
-                    <input type="text" value="${composition.album.name}" name="albumName" />
+                    <input type="text" id="${composition.id == null ? "emp" : composition.id}"
+                           value="${composition.album.name}" class="autoComplete" name="albumName" />
+                    <div id="suggesstion-box${composition.id == null ? "emp" : composition.id}" style="position: absolute"></div>
                 </td>
                 <td>
                     <input type = "submit" value = "Save"/>
@@ -63,7 +67,7 @@
     </td>
 </form>
 <script>
-
+    $(document).ready(auto("Album"));
 </script>
 </body>
 </html>

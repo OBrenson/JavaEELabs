@@ -1,7 +1,5 @@
 package com.lab8.domain;
 
-import org.hibernate.annotations.OnDelete;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;

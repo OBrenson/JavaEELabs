@@ -1,8 +1,6 @@
 package com.lab8.dao;
 
-import com.lab8.DataUtil;
 import com.lab8.domain.BaseEntity;
-import com.lab8.domain.Singer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,10 +10,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import javax.persistence.NoResultException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class DaoService {
@@ -87,13 +83,13 @@ public class DaoService {
     public String getAlbumMinSong() {
         List<Object[]> res;
         try(Session session = factory.openSession()) {
-            res = session.createNativeQuery("select s.name, min(a.name) as al, min(c.duration) as dur from singer s " +
-                    "left join album a on s.id = a.singer_id left join composition c on c.album_id = a.id group by s.name")
+            res = session.createNativeQuery("select s.name, min(a.name) as al, c.name as cname, min(c.duration) as dur from singer s " +
+                    "left join album a on s.id = a.singer_id left join composition c on c.album_id = a.id group by s.name, c.name")
                     .getResultList();
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (Object[]o : res) {
-            stringBuilder.append(String.format("Singer: %s, Album: %s, Duration: %s </br>", o[0], o[1], o[2]));
+            stringBuilder.append(String.format("Singer: %s, Album: %s, Composition: %s, Duration: %s </br>", o[0], o[1], o[2], o[3]));
         }
         return stringBuilder.toString();
     }
@@ -114,6 +110,15 @@ public class DaoService {
         resStr[0] = stringBuilder.toString();
         resStr[1] = String.valueOf(res.get(0)[1]);
         return resStr;
+    }
+
+    public List<String> findByLetters(String letters, String clazzName) {
+        try(Session session = factory.openSession()) {
+            return session.createQuery(
+                    String.format("select e.name from %s e where e.name like '%%%s%%'", clazzName, letters),
+                    String.class).
+                    getResultList();
+        }
     }
 
     private <T extends BaseEntity> void execTransaction(T baseEntity, BiConsumer<T, Session> func) {

@@ -52,6 +52,10 @@ public class AppTest
         String ams = daoService.getAlbumMinSong();
         System.out.println(ams);
 
+        List<String> r = daoService.findByLetters("e", "Composition");
+        System.out.println(r.toString());
+
+
         Singer s = daoService.findByName("Led Zeppelin", Singer.class);
         System.out.println(s);
         s.setName("NeW " + s.getName());

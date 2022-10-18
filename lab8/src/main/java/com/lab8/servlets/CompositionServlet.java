@@ -38,7 +38,7 @@ public class CompositionServlet extends HttpServlet {
         String albumName = req.getParameter("albumName");
         String dur = req.getParameter("duration");
         int duration = Integer.parseInt(dur);
-        if (duration < 0) {
+        if (duration <= 0) {
             req.setAttribute("durException", "true");
             updatePage(req, resp);
             return;
